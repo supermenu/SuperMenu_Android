@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.lenovo.mytodolist.DishDetailsActivity">
+
+        <!--  以下页面就是简介详情的页面了开始默认是隐藏的-->
+        <!--  从上到下的Toolbar-->
+        <RelativeLayout
+            android:id="@+id/toolbar_details"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:clickable="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/toolbar_back"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:background="@mipmap/ic_arrow_left"
+                android:padding="15dp" />
+
+        </RelativeLayout>
+
+
+        <!--  详情-->
+        <ScrollView
+            android:id="@+id/sv_details"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            >
+
+            <LinearLayout
+                android:id="@+id/ll_details"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:clickable="true"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:id="@+id/iv_dish"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:paddingBottom="1dp" />
+
+                <TextView
+                    android:id="@+id/tv_dishname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:textSize="28sp" />
+
+                <TextView
+                    android:id="@+id/tv_others"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:fontFamily="sans-serif-light"
+                    android:textColor="@color/black"
+                    android:gravity="center_horizontal"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_in"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="材料"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.example.lenovo.mytodolist.ListViewForScrollView
+                    android:id="@+id/lv_ingredients"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/ltgray"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:scrollbars="none"/>
+
+                <com.example.lenovo.mytodolist.ListViewForScrollView
+                    android:id="@+id/lv_steps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/ltgray"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:scrollbars="none"
+                    />
+
+
+
+            </LinearLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+

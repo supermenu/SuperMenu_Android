@@ -1,0 +1,34 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/wrapper"
+    tools:context="com.example.lenovo.mytodolist.TuijianFragment">
+
+    <FrameLayout
+        android:id="@+id/toolbar_list"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-bold"
+            android:text="@string/tuijian"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+    </FrameLayout>
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_list"
+        android:background="@color/gray"
+        tools:listitem="@layout/dishlist_item"
+        android:divider="@null" />
+
+</RelativeLayout>

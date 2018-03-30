@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">超级菜谱</string>
+    <string name="new_item">New To Do</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_mine_fragment">Hello mine fragment</string>
+    <string name="hello_con_fragment">Hello con fragment</string>
+    <string name="hello_tuijian_fragment">Hello tuijian fragment</string>
+    <string name="tuijian">今日推荐</string>
+    <string name="phone_number">电话号码</string>
+    <string name="password">密码</string>
+    <string name="password_confirm">确认密码</string>
+    <string name="sex">性别</string>
+    <string name="weight">体重</string>
+    <string name="height">身高</string>
+    <string name="username">用户名</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

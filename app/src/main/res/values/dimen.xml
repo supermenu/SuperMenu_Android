@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="height_image">250dp</dimen>
+    <dimen name="height_picture_with_toolbar">320dp</dimen>
+</resources>

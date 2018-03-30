@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context="com.example.lenovo.mytodolist.RegisterActivity">
+
+<!-- 自定义标题 -->
+<TextView
+    android:id="@+id/toolbar_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:textColor="@color/black"
+    android:text="注册信息"
+    android:textSize="18sp"/>
+
+<EditText
+    android:id="@+id/reg_account"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:singleLine="true"
+    android:inputType="number"
+    android:hint="@string/username"
+    android:textSize="16sp"
+    android:textColor="@color/black"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:layout_marginTop="30dp"
+    android:layout_gravity="center_vertical"/>
+
+<EditText
+    android:id="@+id/reg_password"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:inputType="textPassword"
+    android:hint="@string/password"
+    android:textSize="16sp"
+    android:textColor="@color/black"
+    android:singleLine="true"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:layout_marginTop="15dp"
+    android:layout_gravity="center_vertical"/>
+
+<EditText
+    android:id="@+id/reg_confirm_password"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:inputType="textPassword"
+    android:hint="@string/password_confirm"
+    android:textSize="16sp"
+    android:textColor="@color/black"
+    android:singleLine="true"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:layout_marginTop="15dp"
+    android:layout_gravity="center_vertical"/>
+
+<ImageButton
+    android:id="@+id/reg_singup"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:layout_margin="10dp"
+    android:textSize="20sp"
+    android:background="@mipmap/more"
+    android:layout_gravity="center_horizontal"
+    />
+
+    <TextView
+        android:id="@+id/tishi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="密码不匹配"
+        android:textColor="@color/red"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible"
+       />
+
+</LinearLayout>
+
