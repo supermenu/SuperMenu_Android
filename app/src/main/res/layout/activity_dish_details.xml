@@ -85,6 +85,21 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/tv_add_intolanzi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="丢进菜篮子"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:clickable="true"/>
+
+
                 <com.example.lenovo.mytodolist.ListViewForScrollView
                     android:id="@+id/lv_ingredients"
                     android:layout_width="match_parent"

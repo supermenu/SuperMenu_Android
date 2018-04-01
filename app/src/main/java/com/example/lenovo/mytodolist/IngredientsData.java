@@ -11,20 +11,19 @@ package com.example.lenovo.mytodolist;
  */
 
 public class IngredientsData {
-    int id;//数据id
+
     long dish_id;//材料所属菜的id
     String name;//菜名
     String ingredient;//材料名+用量
-    IngredientsData(int id , int dish_id,String n,String ingre)
+    IngredientsData(long dish_id,String n,String ingre)
     {
-        this.id=id;
+
         this.dish_id=dish_id;
         name = new String(n);
         ingredient = new String(ingre);
     }
-    IngredientsData(int id , int dish_id)
+    IngredientsData( long dish_id)
     {
-        this.id=id;
         this.dish_id=dish_id;
     }
     String getName()
@@ -40,10 +39,6 @@ public class IngredientsData {
     {
         //String初始化后不能再改变
         name = new String(n);
-    }
-    int getId()
-    {
-        return id;
     }
 
    long getDish_id()

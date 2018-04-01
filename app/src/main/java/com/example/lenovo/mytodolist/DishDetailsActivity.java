@@ -26,7 +26,7 @@ import java.util.List;
 public class DishDetailsActivity extends Activity {
     ListViewForScrollView lv_ingredients,lv_steps;//用在scrollview内部的listview
     ImageView tb_back,iv_dish;
-    TextView tv_dishname,tv_ingredients,tv_steps,tv_others;
+    TextView tv_dishname,tv_ingredients,tv_steps,tv_others,add_intobaskaet;
     RelativeLayout toolbar_details;
     ScrollView sv_details;
     List<DishData> dish_data;
@@ -61,6 +61,20 @@ public class DishDetailsActivity extends Activity {
             @Override
             public void onClick(View v) {
                finish();//当前页面关闭
+            }
+        });
+        add_intobaskaet=(TextView)findViewById(R.id.tv_add_intolanzi);
+        add_intobaskaet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int length = dish_data.get(pos).getIngredients().size();
+                String dish_name = dish_data.get(pos).getDish_name();
+                for(int i=0;i<dish_data.get(pos).getIngredients().size();i++) {
+                    StaticData.IngredientsData.add(new IngredientsData(StaticData
+                            .totaldish_inbasket, dish_name, dish_data.get(pos).getIngredients().get(i)));
+                }
+                StaticData.totaldish_inbasket++;
+                Toast.makeText(DishDetailsActivity.this,"已丢进菜篮子",Toast.LENGTH_SHORT).show();
             }
         });
     }

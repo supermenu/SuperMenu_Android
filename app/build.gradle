@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.mob.sdk'
 android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.lenovo.mytodolist"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -30,4 +30,23 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.ikidou:FragmentBackHandler:2.1'
+    compile 'com.android.support:cardview-v7:26.+'
 }
+
+MobSDK {
+    appKey "24f70f88faffd"
+    appSecret "68cc4bb19e706666db7fe5a91e8d691c"
+    //gui false
+    /*
+    ShareSDK {
+        devInfo {
+            SinaWeibo {
+            }
+            Wechat {
+            }
+            QQ {
+            }
+        }
+    }*/
+}
+

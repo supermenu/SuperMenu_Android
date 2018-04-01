@@ -36,7 +36,6 @@ public class LanziFragment extends Fragment {
 
     StickyListHeadersListView IngredientsList;//材料布局listview，带有header和item
     TextView header;
-    public List<IngredientsData> ItemList;//存储数据
     IngredientsAdapter InAdapter;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -93,10 +92,9 @@ public class LanziFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_lanzi, container, false);
         IngredientsList = (StickyListHeadersListView) view.findViewById(R.id.list);
         //材料数据，材料信息+菜名
-        ItemList = new ArrayList<IngredientsData>();//存储数据
         initDatas();
         //数组适配器，将itemlist的数据显示到ingredientslist
-        InAdapter = new IngredientsAdapter(this.getActivity(), ItemList);
+        InAdapter = new IngredientsAdapter(this.getActivity(), StaticData.IngredientsData);
         IngredientsList.setAdapter(InAdapter);
 
         //点击组内材料，显示删除线和变灰
@@ -134,14 +132,14 @@ public class LanziFragment extends Fragment {
 
     private void updateData() {
 
-        if (InAdapter != null && ItemList != null) {
+        if (InAdapter != null && StaticData.IngredientsData != null) {
 
             InAdapter.notifyDataSetChanged();
         }
     }
 
     private void initDatas() {
-
+/*
         ItemList.add(new IngredientsData(0,0,"红烧肉","五花肉"));
         ItemList.add(new IngredientsData(1,0,"红烧肉","八角"));
         ItemList.add(new IngredientsData(2,0,"红烧肉","酱油"));
@@ -152,6 +150,18 @@ public class LanziFragment extends Fragment {
         ItemList.add(new IngredientsData(2,1,"回锅肉","酱油"));
         ItemList.add(new IngredientsData(3,1,"回锅肉","盐"));
         ItemList.add(new IngredientsData(4,1,"回锅肉","豆豉"));
+        */
+        StaticData.IngredientsData.add(new IngredientsData(0,"红烧肉","五花肉"));
+        StaticData.IngredientsData.add(new IngredientsData(0,"红烧肉","八角"));
+        StaticData.IngredientsData.add(new IngredientsData(0,"红烧肉","酱油"));
+        StaticData.IngredientsData.add(new IngredientsData(0,"红烧肉","盐"));
+
+        StaticData.IngredientsData.add(new IngredientsData(1,"回锅肉","带皮五花肉"));
+        StaticData.IngredientsData.add(new IngredientsData(1,"回锅肉","蒜苗"));
+        StaticData.IngredientsData.add(new IngredientsData(1,"回锅肉","酱油"));
+        StaticData.IngredientsData.add(new IngredientsData(1,"回锅肉","盐"));
+        StaticData.IngredientsData.add(new IngredientsData(1,"回锅肉","豆豉"));
+        StaticData.totaldish_inbasket=2;
 
     }
 
