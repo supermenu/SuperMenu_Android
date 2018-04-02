@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.tv_lanzi:
                 vp.setCurrentItem(1, true);
+                lanzi_fargment.updateData();
                 break;
             case R.id.tv_tuijian:
                 vp.setCurrentItem(2, true);
@@ -228,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             iv_lanzi.setImageBitmap(lanzi1);
             iv_tuijian.setImageBitmap(tuijian2);
             iv_mine.setImageBitmap(mine2);
+            lanzi_fargment.updateData();
         } else if (position == 2) {
             tv_con.setTextColor(Color.parseColor("#bfbfbf"));
             tv_lanzi.setTextColor(Color.parseColor("#bfbfbf"));

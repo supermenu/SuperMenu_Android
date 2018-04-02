@@ -34,9 +34,10 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class LanziFragment extends Fragment {
 
-    StickyListHeadersListView IngredientsList;//材料布局listview，带有header和item
+    ListView IngredientsList;//材料布局listview，带有header和item
     TextView header;
     IngredientsAdapter InAdapter;
+    View.OnClickListener fordelete;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -90,47 +91,50 @@ public class LanziFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_lanzi, container, false);
-        IngredientsList = (StickyListHeadersListView) view.findViewById(R.id.list);
+        IngredientsList = (ListView) view.findViewById(R.id.list);
         //材料数据，材料信息+菜名
         initDatas();
         //数组适配器，将itemlist的数据显示到ingredientslist
         InAdapter = new IngredientsAdapter(this.getActivity(), StaticData.IngredientsData);
         IngredientsList.setAdapter(InAdapter);
 
-        //点击组内材料，显示删除线和变灰
         IngredientsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView itemtext = view.findViewById(R.id.ingredient);
-                if (itemtext.getPaint().getFlags() == Paint.STRIKE_THRU_TEXT_FLAG) {
-                    itemtext.setTextColor(getResources().getColor(R.color.black));
-                    itemtext.getPaint().setFlags(0);
-                } else {
-                    itemtext.setTextColor(getResources().getColor(R.color.ltgray));
-                    itemtext.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                int type=InAdapter.getItemViewType(position);
+                final int p=position;
+                IngredientsData in= InAdapter.getIngredients(position);
+                if(type==1){// 点击组内材料，显示删除线和变灰
+                    TextView itemtext = view.findViewById(R.id.ingredient);
+                    if (itemtext.getPaint().getFlags() == Paint.STRIKE_THRU_TEXT_FLAG) {
+                        itemtext.setTextColor(getResources().getColor(R.color.black));
+                        itemtext.getPaint().setFlags(0);
+                        in.setStatus(InAdapter.getItemPositioninList(position)-1,0);
+                    } else {
+                        itemtext.setTextColor(getResources().getColor(R.color.ltgray));
+                        itemtext.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                        in.setStatus(InAdapter.getItemPositioninList(position)-1,1);
+                    }
+                }
+                else
+                {
+                    ImageButton delete;
+                    delete = view.findViewById(R.id.deleteButton);
+                    if(delete.getVisibility()==View.INVISIBLE) {
+                        delete.setVisibility(View.VISIBLE);
+                        in.header_status=1;
+                    }
+                    else{
+                        delete.setVisibility(View.INVISIBLE);
+                        in.header_status=0;}
                 }
             }
         });
-
-        //点击头部出现删除按钮
-        IngredientsList.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
-
-            ImageButton delete;
-            TextView name;
-            @Override
-            public void onHeaderClick(StickyListHeadersListView l, View header, int itemPosition,final long headerId, boolean currentlySticky) {
-                delete = (ImageButton)header.findViewById(R.id.deleteButton);
-                name=(TextView)header.findViewById(R.id.tvHeader);
-                if(delete.getVisibility()==View.INVISIBLE)
-                    delete.setVisibility(View.VISIBLE);
-                else
-                    delete.setVisibility(View.INVISIBLE);
-            }
-        });
+       // updateData();
         return  view;
     }
 
-    private void updateData() {
+    public  void updateData() {
 
         if (InAdapter != null && StaticData.IngredientsData != null) {
 
@@ -139,30 +143,7 @@ public class LanziFragment extends Fragment {
     }
 
     private void initDatas() {
-/*
-        ItemList.add(new IngredientsData(0,0,"红烧肉","五花肉"));
-        ItemList.add(new IngredientsData(1,0,"红烧肉","八角"));
-        ItemList.add(new IngredientsData(2,0,"红烧肉","酱油"));
-        ItemList.add(new IngredientsData(3,0,"红烧肉","盐"));
-
-        ItemList.add(new IngredientsData(0,1,"回锅肉","带皮五花肉"));
-        ItemList.add(new IngredientsData(1,1,"回锅肉","蒜苗"));
-        ItemList.add(new IngredientsData(2,1,"回锅肉","酱油"));
-        ItemList.add(new IngredientsData(3,1,"回锅肉","盐"));
-        ItemList.add(new IngredientsData(4,1,"回锅肉","豆豉"));
-        */
-        StaticData.IngredientsData.add(new IngredientsData(0,"红烧肉","五花肉"));
-        StaticData.IngredientsData.add(new IngredientsData(0,"红烧肉","八角"));
-        StaticData.IngredientsData.add(new IngredientsData(0,"红烧肉","酱油"));
-        StaticData.IngredientsData.add(new IngredientsData(0,"红烧肉","盐"));
-
-        StaticData.IngredientsData.add(new IngredientsData(1,"回锅肉","带皮五花肉"));
-        StaticData.IngredientsData.add(new IngredientsData(1,"回锅肉","蒜苗"));
-        StaticData.IngredientsData.add(new IngredientsData(1,"回锅肉","酱油"));
-        StaticData.IngredientsData.add(new IngredientsData(1,"回锅肉","盐"));
-        StaticData.IngredientsData.add(new IngredientsData(1,"回锅肉","豆豉"));
-        StaticData.totaldish_inbasket=2;
-
+        updateData();
     }
 
 

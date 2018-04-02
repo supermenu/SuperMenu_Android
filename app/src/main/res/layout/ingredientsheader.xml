@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ltyellow">
+    android:background="@color/ltyellow"
+    android:descendantFocusability="blocksDescendants">
 
     <TextView
         android:id="@+id/tvHeader"
@@ -19,14 +20,17 @@
 
     <ImageButton
         android:id="@+id/deleteButton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="5dp"
-        android:visibility="invisible"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignEnd="@+id/tvHeader"
+        android:layout_alignRight="@+id/tvHeader"
+        android:layout_alignTop="@+id/tvHeader"
+        android:layout_marginEnd="22dp"
+        android:layout_marginRight="22dp"
+        android:focusable="false"
         android:background="@null"
+        android:visibility="invisible"
         app:srcCompat="@mipmap/delete" />
-
+    <!--foucusable用于处理当listview中有clickable子项时，父项无法获得焦点响应点击事件-->
 
 </RelativeLayout>

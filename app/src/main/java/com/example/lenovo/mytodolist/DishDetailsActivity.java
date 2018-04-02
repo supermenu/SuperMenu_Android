@@ -69,10 +69,7 @@ public class DishDetailsActivity extends Activity {
             public void onClick(View v) {
                 int length = dish_data.get(pos).getIngredients().size();
                 String dish_name = dish_data.get(pos).getDish_name();
-                for(int i=0;i<dish_data.get(pos).getIngredients().size();i++) {
-                    StaticData.IngredientsData.add(new IngredientsData(StaticData
-                            .totaldish_inbasket, dish_name, dish_data.get(pos).getIngredients().get(i)));
-                }
+                StaticData.IngredientsData.add(new IngredientsData(StaticData.totaldish_inbasket, dish_name, dish_data.get(pos).getIngredients()));
                 StaticData.totaldish_inbasket++;
                 Toast.makeText(DishDetailsActivity.this,"已丢进菜篮子",Toast.LENGTH_SHORT).show();
             }

@@ -1,11 +1,14 @@
 package com.example.lenovo.mytodolist;
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.lang.reflect.Array;
@@ -21,26 +24,169 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  * 将IngredientsData显示到listview的adapter
  * 这是菜篮子界面的适配器
  */
+public class IngredientsAdapter extends BaseAdapter {
 
-public class IngredientsAdapter extends BaseAdapter implements StickyListHeadersAdapter{
-
+    private static final int TYPE_Header = 0;
+    private static final int TYPE_ITEM = 1;
     private LayoutInflater inflater;
 
-    private List<IngredientsData> mData;
+    private List<IngredientsData> mListData;
+    //private
 
     public IngredientsAdapter(Activity context, List<IngredientsData> Data){
         inflater = LayoutInflater.from(context);
-        mData = Data;
+        mListData = Data;
     }
+
 
     @Override
     public int getCount() {
-        return mData.size();
+        int count = 0;
+
+        if (null != mListData) {
+            //  所有分类中item的总和是ListVIew  Item及header的总个数
+            IngredientsData in;
+            for (int i=0;i< mListData.size();i++) {
+                in=mListData.get(i);
+                count += in.getItemCount();
+            }
+        }
+
+        return count;
     }
 
     @Override
     public Object getItem(int position) {
-        return mData.get(position);
+
+        // 异常情况处理
+        if (null == mListData || position <  0|| position > getCount()) {
+            return null;
+        }
+
+        // 同一分类内，第一个元素的索引值
+        int ingredientsHeaderIndex = 0;
+        IngredientsData in;
+        for (int i=0;i< mListData.size();i++) {
+            in=mListData.get(i);
+            int size = in.getItemCount();
+            // 在当前分类中的索引值
+            int ingredientsIndex = position - ingredientsHeaderIndex;
+            // item在当前分类内
+            if (ingredientsIndex < size) {
+                return  in.getItem( ingredientsIndex );
+            }
+
+            // 索引移动到当前分类结尾，即下一个分类第一个元素索引
+            ingredientsHeaderIndex += size;
+        }
+
+        return null;
+    }
+
+    public IngredientsData getIngredients(int position) {
+
+        // 异常情况处理
+        if (null == mListData || position <  0|| position > getCount()) {
+            return null;
+        }
+
+        // 同一分类内，第一个元素的索引值
+        int ingredientsHeaderIndex = 0;
+        IngredientsData in;
+        for (int i=0;i< mListData.size();i++) {
+            in=mListData.get(i);
+            int size = in.getItemCount();
+            // 在当前分类中的索引值
+            int ingredientsIndex = position - ingredientsHeaderIndex;
+            // item在当前分类内
+            if (ingredientsIndex < size) {
+                return  in;
+            }
+
+            // 索引移动到当前分类结尾，即下一个分类第一个元素索引
+            ingredientsHeaderIndex += size;
+        }
+
+        return null;
+    }
+    public int getItemPositioninList(int position) {
+
+        // 异常情况处理
+        if (null == mListData || position <  0|| position > getCount()) {
+            return -1;
+        }
+
+        // 同一分类内，第一个元素的索引值
+        int ingredientsHeaderIndex = 0;
+        IngredientsData in;
+        for (int i=0;i< mListData.size();i++) {
+            in=mListData.get(i);
+            int size = in.getItemCount();
+            // 在当前分类中的索引值
+            int ingredientsIndex = position - ingredientsHeaderIndex;
+            // item在当前分类内
+            if (ingredientsIndex < size) {
+                return  ingredientsIndex;
+            }
+
+            // 索引移动到当前分类结尾，即下一个分类第一个元素索引
+            ingredientsHeaderIndex += size;
+        }
+
+        return -1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        // 异常情况处理
+        if (null == mListData || position <  0|| position > getCount()) {
+            return TYPE_ITEM;
+        }
+
+
+        int ingredinetsFirstIndex = 0;
+        IngredientsData temp;
+        for (int i=0;i< mListData.size();i++) {
+            temp=mListData.get(i);
+            int size = temp.getItemCount();
+            // 在当前分类中的索引值
+            int ingredinetsIndex = position - ingredinetsFirstIndex;
+            if (ingredinetsIndex== 0) {
+                return TYPE_Header;
+            }
+
+            ingredinetsFirstIndex += size;
+        }
+
+        return TYPE_ITEM;
+    }
+
+
+    public void delete(int position)
+    {
+        int ingredientsHeaderIndex = 0;
+        int headerinderx=0;
+        IngredientsData in;
+        for (int i=0;i< mListData.size();i++) {
+            in=mListData.get(i);
+            int size = in.getItemCount();
+            // 在当前分类中的索引值
+            int ingredientsIndex = position - ingredientsHeaderIndex;
+            // item在当前分类内
+            if (ingredientsIndex ==0) {
+                    mListData.remove( headerinderx);
+                    return;
+            }
+
+            // 索引移动到当前分类结尾，即下一个分类第一个元素索引
+            ingredientsHeaderIndex += size;
+            headerinderx++;
+        }
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
     }
 
     @Override
@@ -49,81 +195,178 @@ public class IngredientsAdapter extends BaseAdapter implements StickyListHeaders
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder=null;
+        ViewHeadHolder Holder=null;
+        int type = getItemViewType(position);
+        if (convertView==null){
+            switch (type) {
+                case TYPE_Header:
+                    Holder = new ViewHeadHolder();
+                    convertView = inflater.inflate(R.layout.ingredientsheader, null);
+                    Holder.textView = (TextView) convertView.findViewById(R.id.tvHeader);
+                    Holder.delete = convertView.findViewById(R.id.deleteButton);
+                    convertView.setTag(Holder);
+                    break;
+                case TYPE_ITEM:
+                    convertView = inflater.inflate(R.layout.ingredientitem, null);
+                    viewHolder = new ViewHolder();
+                    viewHolder.content = (TextView) convertView.findViewById(R.id.ingredient);
+                    convertView.setTag(viewHolder);
+                    break;
 
-        if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.item, parent, false);
-            holder.tv_ingredient = (TextView) convertView.findViewById(R.id.ingredient);
-            convertView.setTag(holder);
-
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+            }
+        }else{
+            switch (type){
+                case TYPE_Header:
+                    Holder= (ViewHeadHolder) convertView.getTag();
+                    break;
+                case TYPE_ITEM:
+                    viewHolder= (ViewHolder) convertView.getTag();
+                    break;
+            }
         }
-        //取得当前材料表对应位置的材料
-        IngredientsData data = this.mData.get(position);
+        int ingredientsHeaderIndex = 0;
 
-        if (data != null) {
+        IngredientsData in=mListData.get(0);
+        switch (type){
+            case TYPE_Header:
+               ingredientsHeaderIndex = 0;
+                 in=mListData.get(0);
+                for (int i=0;i< mListData.size();i++) {
+                    in=mListData.get(i);
+                    int size = in.getItemCount();
+                    // 在当前分类中的索引值
+                    // item在当前分类内
+                    if (position - ingredientsHeaderIndex==0) {
+                        break;
+                    }
+                    // 索引移动到当前分类结尾，即下一个分类第一个元素索引
+                    ingredientsHeaderIndex += size;
+                }
+                int status=in.header_status;
+                if(status==1)
+                {
+                    Holder.delete.setVisibility(View.VISIBLE);
+                }else
+                    Holder.delete.setVisibility(View.INVISIBLE);
 
-          //给该组对应item赋值
-           holder.tv_ingredient.setText(data.getIngredient());
-        }
-
-        return convertView;
-    }
-
-    @Override
-    //头部显示菜名
-    public View getHeaderView(int position, View convertView, ViewGroup parent) {
-        HeaderViewHolder holder;
-      final  long  dish= this.mData.get(position).dish_id;
-        if (convertView == null) {
-            holder = new HeaderViewHolder();
-            convertView = inflater.inflate(R.layout.header, parent, false);
-            holder.text = (TextView) convertView.findViewById(R.id.tvHeader);
-            holder.delete = (ImageButton) convertView.findViewById(R.id.deleteButton);
-            holder.delete.setTag(dish);//将dishid作为tag
-            //点击删除图标按钮删除整个材料组
-            holder.delete.setOnClickListener(new View.OnClickListener() {
+                Holder.delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int remnum=0;
-                        for(int i=0;i<mData.size();i++)
-                        {
-                            if(mData.get(i).dish_id==(long)(v.getTag())) {
-                                mData.remove(i);
-                                i--;//删除后下一项改变到现在的位置了
-                            }
-                            else if(mData.get(i).dish_id>(long)(v.getTag()))
-                                mData.get(i).dish_id--;
-                        }
+                        delete(position);
                         IngredientsAdapter.this.notifyDataSetChanged();
                     }
                 });
-            convertView.setTag(holder);
-        } else {
-            holder = (HeaderViewHolder) convertView.getTag();
+                String  Value = (String) getItem(position);
+                Holder.textView.setText( Value );
+                break;
+            case TYPE_ITEM:
+                // 同一分类内，第一个元素的索引值
+               ingredientsHeaderIndex = 0;
+                int ingredientsIndex=0;
+                 in=in=mListData.get(0);
+                for (int i=0;i< mListData.size();i++) {
+                    in=mListData.get(i);
+                    int size = in.getItemCount();
+                    // 在当前分类中的索引值
+                    ingredientsIndex = position - ingredientsHeaderIndex;
+                    // item在当前分类内
+                    if (ingredientsIndex < size) {
+                        break;
+                    }
+                    // 索引移动到当前分类结尾，即下一个分类第一个元素索引
+                    ingredientsHeaderIndex += size;
+                }
+               int status2=in.getStatus(ingredientsIndex-1);
+                if(status2==0){
+                    viewHolder.content.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.content.getPaint().setFlags(0);
+                    } else
+                        {
+                     viewHolder.content.setTextColor(Color.parseColor("#ffcccccc"));
+                       viewHolder.content.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                    }
+                // 绑定数据
+                viewHolder.content.setText( (String)getItem(position) );
+                break;
         }
-        //给组名赋值菜名
-        String headerText = this.mData.get(position).getName();
-        holder.text.setText(headerText);
+
+
         return convertView;
+        /*
+        int itemViewType = getItemViewType(position);
+        switch (itemViewType) {
+            /*case TYPE_Header:
+                ViewHeadHolder Holder = null;
+                if (null == convertView) {
+                    Holder = new  ViewHeadHolder();
+                    convertView = inflater.inflate(R.layout.ingredientsheader, null);
+                    Holder.textView = (TextView) convertView.findViewById(R.id.tvHeader);
+                    Holder.delete=convertView.findViewById(R.id.deleteButton);
+                    Holder.delete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            delete(position);
+                            IngredientsAdapter.this.notifyDataSetChanged();
+                        }
+                    });
+                    convertView.setTag(Holder);
+                }else
+                {
+                    Holder = ( ViewHeadHolder) convertView.getTag();
+                }
+
+                String  Value = (String) getItem(position);
+                Holder.textView.setText( Value );
+                break;
+                */
+/*
+
+
+            case TYPE_ITEM:
+                ViewHolder viewHolder = null;
+                if (null == convertView||viewHolder.content==null) {
+                    convertView = inflater.inflate(R.layout.ingredientitem, null);
+
+                    viewHolder = new ViewHolder();
+                    viewHolder.content = (TextView) convertView.findViewById(R.id.ingredient);
+                    convertView.setTag(viewHolder);
+                } else {
+                    viewHolder = (ViewHolder) convertView.getTag();
+                }
+
+                // 绑定数据
+                viewHolder.content.setText( (String)getItem(position) );
+                break;
+        }
+
+        return convertView;*/
     }
+
 
     @Override
-    public long getHeaderId(int position) {
-        //return the first character of the country as ID because this is what headers are based upon
-        return this.mData.get(position).getDish_id();
+    public boolean areAllItemsEnabled() {
+        return true;
     }
 
-    class HeaderViewHolder {
-        TextView text;
+    public boolean isEnabled(int position) {
+        return true;
+    }
+
+
+
+    private class ViewHolder {
+       // int type=2;
+        TextView content;
+      //  TextView textView ;
+      //  ImageButton delete;
+    }
+
+    private class ViewHeadHolder {
+        TextView textView ;
         ImageButton delete;
     }
 
-    class ViewHolder {
-        TextView tv_ingredient;
-    }
 
 }
