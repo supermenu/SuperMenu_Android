@@ -20,10 +20,10 @@ public class IngredientsData {
     List<String> ingredient;//材料名+用量
     int[] status;
     int header_status=0;
-    IngredientsData(long dish_id,String n,List<String> ingre)
+    IngredientsData(String n,List<String> ingre)
     {
 
-        this.dish_id=dish_id;
+        this.dish_id= StaticData.totaldish_inbasket;
         name = new String(n);
         ingredient = ingre;
         status=new int[ingre.size()];

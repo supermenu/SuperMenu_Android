@@ -9,13 +9,20 @@ import java.util.List;
 
 public class StaticData {
     static List<IngredientsData> IngredientsData=new ArrayList<>();
+    static List<String> dishlist=new ArrayList<>();
     static long  totaldish_inbasket=0;
     static int lastdishnum=0;
     void addIngredientsToBasket(IngredientsData newdata)
     {
+        dishlist.add(newdata.getName());
         lastdishnum=getCount();
-        IngredientsData.add(newdata);
-}
+        IngredientsData.add(newdata);}
+
+    void RemoveIngredientsToBasket(IngredientsData newdata)
+    {
+        dishlist.add(newdata.getName());
+        lastdishnum=getCount();
+        IngredientsData.add(newdata);}
 
     public int getCount() {
         int count = 0;

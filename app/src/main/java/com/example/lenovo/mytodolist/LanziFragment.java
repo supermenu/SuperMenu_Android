@@ -1,27 +1,27 @@
 package com.example.lenovo.mytodolist;
 
-import android.app.ListFragment;
 import android.content.Context;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -35,10 +35,11 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 public class LanziFragment extends Fragment {
 
     ListView IngredientsList;//材料布局listview，带有header和item
-    TextView header;
     IngredientsAdapter InAdapter;
-    View.OnClickListener fordelete;
-
+    PullToRefreshLayout pullrefresh;
+    String get_ingredients;
+    String get_dish;
+    DataBase newdata;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -92,6 +93,76 @@ public class LanziFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_lanzi, container, false);
         IngredientsList = (ListView) view.findViewById(R.id.list);
+        pullrefresh=view.findViewById(R.id.refresh);
+        pullrefresh.setRefreshListener(new BaseRefreshListener() {
+            @Override
+            public void refresh() {
+                final Thread tbase=new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        newdata = new DataBase();//连接池
+                        try {
+                            newdata.tbase.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        User u = new User("gyh", newdata);
+                        try {
+                            u.t1.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        get_dish = u.get_cooking();
+                        Log.v("dish", get_dish);
+                        Menu m = new Menu(get_dish, newdata);
+
+                        try {
+                            m.t2.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        get_ingredients = m.getIngredients();
+                        PutIngredients(get_dish, get_ingredients);
+//                        Log.v("getIngredients", get_ingredients);
+                        //System.out.println(m.getIngredients());
+                        String basket = getDishinBasket();
+                     //   Log.v("getDishinBasket", basket);
+                        u.setBasket(basket);
+                        u.finish();
+                        m.finish();
+                        newdata.finish();
+                    }
+                });
+                tbase.start();
+
+               new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 结束刷新
+                        try {
+                            tbase.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        InAdapter.notifyDataSetChanged();
+                        pullrefresh.finishRefresh();
+                    }
+                }, 0);
+                //pullrefresh.finishRefresh();
+            }
+
+            @Override
+            public void loadMore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 结束加载更多
+                        pullrefresh.finishLoadMore();
+                    }
+                }, 2000);
+            }
+        });
+
         //材料数据，材料信息+菜名
         initDatas();
         //数组适配器，将itemlist的数据显示到ingredientslist
@@ -171,6 +242,79 @@ public class LanziFragment extends Fragment {
         mListener = null;
     }
 
+    public String getDishinBasket()
+    {
+        int num = StaticData.IngredientsData.size();
+        String dishinbasket = new String("");
+        for (int i=0;i<num;i++)
+        {
+            dishinbasket=dishinbasket+"#"+StaticData.IngredientsData.get(i).getName();
+        }
+        return dishinbasket;
+    }
+
+    public void PutIngredients(String name,String ingredientslist)
+    {
+        if(ingredientslist!=null) {
+            int num = StaticData.IngredientsData.size();
+            String dishname;
+            for (int i = 0; i < num; i++) {
+                dishname = StaticData.IngredientsData.get(i).getName();
+                Boolean flag=name.equals(dishname);
+                if (flag)
+                {
+                    Toast.makeText(getActivity(), dishname + "已存在于菜篮子", Toast.LENGTH_SHORT);
+                    return;
+                }
+            }
+            String[] list = ingredientslist.split("#");
+            List<String> inlist = Arrays.asList(list);
+            IngredientsData newdish = new IngredientsData(name, inlist);
+            StaticData.IngredientsData.add(newdish);
+            StaticData.totaldish_inbasket++;
+        }
+    }
+
+    public  void fristfresh()
+    {
+        final Thread tbase=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                newdata = new DataBase();//连接池
+                try {
+                    newdata.tbase.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                User u = new User("gyh", newdata);
+                try {
+                    u.t1.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                get_dish = u.get_cooking();
+                Log.v("dish", get_dish);
+                Menu m = new Menu(get_dish, newdata);
+
+                try {
+                    m.t2.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                get_ingredients = m.getIngredients();
+                PutIngredients(get_dish, get_ingredients);
+//                        Log.v("getIngredients", get_ingredients);
+                //System.out.println(m.getIngredients());
+                String basket = getDishinBasket();
+                //   Log.v("getDishinBasket", basket);
+                u.setBasket(basket);
+                u.finish();
+                m.finish();
+                newdata.finish();
+            }
+        });
+        tbase.start();
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

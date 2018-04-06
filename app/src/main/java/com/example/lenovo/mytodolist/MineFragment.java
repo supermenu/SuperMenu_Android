@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,7 +26,8 @@ public class MineFragment extends Fragment {
 
     String username;
     TextView myusername,details;
-    ImageButton mydetails;
+    ImageButton mydetails,share;
+    PopupwindowForshare mPopwindow;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -90,8 +93,39 @@ public class MineFragment extends Fragment {
                setDetails();
            }
        });
+        share=view.findViewById(R.id.ib_share);
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopwindow = new PopupwindowForshare(getActivity(), itemsOnClick);
+                mPopwindow.setAnimationStyle(R.style.popwin_anim_style);
+                mPopwindow.showAtLocation(v,
+                        Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+
+            }
+        });
        return view;
     }
+
+    private  View.OnClickListener itemsOnClick=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mPopwindow.dismiss();
+            mPopwindow.backgroundAlpha(getActivity(), 1f);
+            switch (v.getId()) {
+                case R.id.wechatfriends:
+                    Toast.makeText(getActivity(), "微信好友", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.pyq:
+                    Toast.makeText(getActivity(), "朋友圈", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+
+
+        }
+    };
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

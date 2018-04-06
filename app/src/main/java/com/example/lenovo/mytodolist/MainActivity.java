@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.Color;
@@ -34,16 +37,19 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,ConFragment.OnFragmentInteractionListener,LanziFragment.OnFragmentInteractionListener,TuijianFragment.OnFragmentInteractionListener,MineFragment.OnFragmentInteractionListener{
 
     private TextView  tv_lanzi, tv_tuijian, tv_mine,tv_con;
-    private ImageView iv_lanzi,iv_tuijian,iv_mine,iv_con;
+    private ImageView iv_lanzi,iv_tuijian,iv_mine,iv_con,active;
     private ViewPager vp;
     private Bitmap lanzi1,lanzi2,mine1,mine2,tuijian1,tuijian2,con1,con2;
-    ConFragment conversation_fargment;
+  //  ConFragment conversation_fargment;
     LanziFragment lanzi_fargment ;
     TuijianFragment recommand_fargment;
     MineFragment mine_fargment;
     private List<Fragment> mFragmentList = new ArrayList<Fragment>();
     private FragmentAdapter mFragmentAdapter;
-    String username;
+    String username="gyh";
+    LinearLayout splash;
+    private final int STOP_SPLASH = 0;
+    private final int SPLASH_TIME = 3000;
 
 
     @Override
@@ -54,10 +60,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //设置xml
         setContentView(R.layout.activity_main);
         //获得用户名字符串
-        Intent intent =getIntent();
-        username=intent.getStringExtra("username");
+       // Intent intent =getIntent();
+       // username=intent.getStringExtra("username");
         initViews();
-
+        Message msg = new Message();
+        msg.what = STOP_SPLASH;
         mFragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), mFragmentList);
         vp.setOffscreenPageLimit(4);//ViewPager的缓存为4帧
         vp.setAdapter(mFragmentAdapter);
@@ -67,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //加载下方图标
         loadPictures();
         //ViewPager的监听事件
+        // 注：这里必须用延迟发送消息的方法，否则ImageView不会显示出来
+        splashHandler.sendMessageDelayed(msg, SPLASH_TIME);
         vp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -101,20 +110,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         iv_tuijian = (ImageView) findViewById(R.id.iv_tuijian);
         iv_mine = (ImageView) findViewById(R.id.iv_mine);
         iv_con = (ImageView) findViewById(R.id.iv_con);
+        splash=findViewById(R.id.ll_splash);
+        active=findViewById(R.id.activepage);
 
         //设置下方图标和文字点击事件
+
         tv_lanzi.setOnClickListener(this);
         tv_tuijian.setOnClickListener(this);
         tv_mine.setOnClickListener(this);
         tv_con.setOnClickListener(this);
         iv_lanzi.setOnClickListener(this);
         iv_tuijian.setOnClickListener(this);
-        iv_mine.setOnClickListener(this);
-        iv_con.setOnClickListener(this);
+       // iv_mine.setOnClickListener(this);
+      //  iv_con.setOnClickListener(this);
 
         vp = (ViewPager) findViewById(R.id.mainViewPager);
-        conversation_fargment = new ConFragment();
+       // conversation_fargment = new ConFragment();
         lanzi_fargment= new LanziFragment();
+        lanzi_fargment.fristfresh();
         recommand_fargment = new TuijianFragment();
         mine_fargment = new MineFragment();
         //向我的页面传递用户名字符串
@@ -122,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userb.putString("username",username);
         mine_fargment.setArguments(userb);
         //给FragmentList添加数据，即添加在viewpager中
-        mFragmentList.add(conversation_fargment);
+       // mFragmentList.add(conversation_fargment);
         mFragmentList.add(lanzi_fargment);
         mFragmentList.add(recommand_fargment);
         mFragmentList.add(mine_fargment);
@@ -139,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mine2= BitmapFactory.decodeResource(this.getResources(),R.drawable.mine2);
         tuijian1= BitmapFactory.decodeResource(this.getResources(),R.drawable.tuijian1);
         tuijian2= BitmapFactory.decodeResource(this.getResources(),R.drawable.tuijian2);
-        con1= BitmapFactory.decodeResource(this.getResources(),R.drawable.con1);
-        con2= BitmapFactory.decodeResource(this.getResources(),R.drawable.con2);
+       // con1= BitmapFactory.decodeResource(this.getResources(),R.drawable.con1);
+       // con2= BitmapFactory.decodeResource(this.getResources(),R.drawable.con2);
         iv_con.setImageBitmap(con1);
         iv_lanzi.setImageBitmap(lanzi2);
         iv_tuijian.setImageBitmap(tuijian2);
@@ -152,9 +165,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_con:
-                vp.setCurrentItem(0, true);
-                break;
+          // case R.id.tv_con:
+            //    vp.setCurrentItem(0, true);
+           //     break;
             case R.id.tv_lanzi:
                 vp.setCurrentItem(1, true);
                 lanzi_fargment.updateData();
@@ -165,9 +178,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tv_mine:
                 vp.setCurrentItem(3, true);
                 break;
-            case R.id.iv_con:
-                vp.setCurrentItem(0, true);
-                break;
+            //case R.id.iv_con:
+               // vp.setCurrentItem(0, true);
+               // break;
             case R.id.iv_lanzi:
                 vp.setCurrentItem(1, true);
                 break;
@@ -211,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *由ViewPager的滑动修改底部导航Text的颜色和图片
      */
     private void changeTextColor(int position) {
-        if (position == 0) {
+        /*if (position == 0) {
             tv_con.setTextColor(Color.parseColor("#FF9900"));
             tv_lanzi.setTextColor(Color.parseColor("#bfbfbf"));
             tv_tuijian.setTextColor(Color.parseColor("#bfbfbf"));
@@ -220,31 +233,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             iv_lanzi.setImageBitmap(lanzi2);
             iv_tuijian.setImageBitmap(tuijian2);
             iv_mine.setImageBitmap(mine2);
-        } else if (position == 1) {
-            tv_con.setTextColor(Color.parseColor("#bfbfbf"));
+        } else*/ if (position == 0) {
+          //  tv_con.setTextColor(Color.parseColor("#bfbfbf"));
             tv_lanzi.setTextColor(Color.parseColor("#FF9900"));
             tv_tuijian.setTextColor(Color.parseColor("#bfbfbf"));
             tv_mine.setTextColor(Color.parseColor("#bfbfbf"));
-            iv_con.setImageBitmap(con2);
+          //  iv_con.setImageBitmap(con2);
             iv_lanzi.setImageBitmap(lanzi1);
             iv_tuijian.setImageBitmap(tuijian2);
             iv_mine.setImageBitmap(mine2);
             lanzi_fargment.updateData();
-        } else if (position == 2) {
-            tv_con.setTextColor(Color.parseColor("#bfbfbf"));
+        } else if (position == 1) {
+           // tv_con.setTextColor(Color.parseColor("#bfbfbf"));
             tv_lanzi.setTextColor(Color.parseColor("#bfbfbf"));
             tv_tuijian.setTextColor(Color.parseColor("#FF9900"));
             tv_mine.setTextColor(Color.parseColor("#bfbfbf"));
-            iv_con.setImageBitmap(con2);
+          //  iv_con.setImageBitmap(con2);
             iv_lanzi.setImageBitmap(lanzi2);
             iv_tuijian.setImageBitmap(tuijian1);
             iv_mine.setImageBitmap(mine2);
-        }else if(position==3){
-            tv_con.setTextColor(Color.parseColor("#bfbfbf"));
+        }else if(position==2){
+           // tv_con.setTextColor(Color.parseColor("#bfbfbf"));
             tv_lanzi.setTextColor(Color.parseColor("#bfbfbf"));
             tv_tuijian.setTextColor(Color.parseColor("#bfbfbf"));
             tv_mine.setTextColor(Color.parseColor("#FF9900"));
-            iv_con.setImageBitmap(con2);
+            //iv_con.setImageBitmap(con2);
             iv_lanzi.setImageBitmap(lanzi2);
             iv_tuijian.setImageBitmap(tuijian2);
             iv_mine.setImageBitmap(mine1);
@@ -259,10 +272,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             lanzi1.recycle();
         if (!lanzi2.isRecycled())
             lanzi2.recycle();
-        if (!con1.isRecycled())
+       /* if (!con1.isRecycled())
             con1.recycle();
         if (!con2.isRecycled())
-            con2.recycle();
+            con2.recycle();*/
         if (!tuijian1.isRecycled())
             tuijian1.recycle();
         if (!tuijian2.isRecycled())
@@ -291,6 +304,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    private Handler splashHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case STOP_SPLASH:
+                    splash.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
+
+            super.handleMessage(msg);
+        }
+    };
 
 }
 
