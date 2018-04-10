@@ -21,7 +21,10 @@
             android:textSize="25sp" />
 
     </FrameLayout>
-
+    <com.jwenfeng.library.pulltorefresh.PullToRefreshLayout
+        android:id="@+id/loadmore"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
@@ -30,5 +33,6 @@
         android:background="@color/gray"
         tools:listitem="@layout/dishlist_item"
         android:divider="@null" />
+    </com.jwenfeng.library.pulltorefresh.PullToRefreshLayout>
 
 </RelativeLayout>

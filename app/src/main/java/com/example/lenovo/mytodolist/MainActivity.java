@@ -36,8 +36,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,ConFragment.OnFragmentInteractionListener,LanziFragment.OnFragmentInteractionListener,TuijianFragment.OnFragmentInteractionListener,MineFragment.OnFragmentInteractionListener{
 
-    private TextView  tv_lanzi, tv_tuijian, tv_mine,tv_con;
-    private ImageView iv_lanzi,iv_tuijian,iv_mine,iv_con,active;
+    private TextView  tv_lanzi, tv_tuijian, tv_mine;
+    private ImageView iv_lanzi,iv_tuijian,iv_mine,active;
     private ViewPager vp;
     private Bitmap lanzi1,lanzi2,mine1,mine2,tuijian1,tuijian2,con1,con2;
   //  ConFragment conversation_fargment;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MineFragment mine_fargment;
     private List<Fragment> mFragmentList = new ArrayList<Fragment>();
     private FragmentAdapter mFragmentAdapter;
-    String username="gyh";
+    String username="小羊苏珊";
     LinearLayout splash;
     private final int STOP_SPLASH = 0;
     private final int SPLASH_TIME = 3000;
@@ -66,11 +66,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Message msg = new Message();
         msg.what = STOP_SPLASH;
         mFragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), mFragmentList);
-        vp.setOffscreenPageLimit(4);//ViewPager的缓存为4帧
+        vp.setOffscreenPageLimit(3);//ViewPager的缓存为4帧
         vp.setAdapter(mFragmentAdapter);
         vp.setCurrentItem(0);//初始设置ViewPager选中第一帧
         //设置下方导航栏，文字文灰色
-        tv_con.setTextColor(Color.parseColor("#FF9900"));
+        tv_lanzi.setTextColor(Color.parseColor("#FF9900"));
         //加载下方图标
         loadPictures();
         //ViewPager的监听事件
@@ -105,11 +105,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_lanzi = (TextView) findViewById(R.id.tv_lanzi);
         tv_tuijian= (TextView) findViewById(R.id.tv_tuijian);
         tv_mine = (TextView) findViewById(R.id.tv_mine);
-        tv_con = (TextView) findViewById(R.id.tv_con);
+      //  tv_con = (TextView) findViewById(R.id.tv_con);
         iv_lanzi = (ImageView) findViewById(R.id.iv_lanzi);
         iv_tuijian = (ImageView) findViewById(R.id.iv_tuijian);
         iv_mine = (ImageView) findViewById(R.id.iv_mine);
-        iv_con = (ImageView) findViewById(R.id.iv_con);
+     //   iv_con = (ImageView) findViewById(R.id.iv_con);
         splash=findViewById(R.id.ll_splash);
         active=findViewById(R.id.activepage);
 
@@ -118,10 +118,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_lanzi.setOnClickListener(this);
         tv_tuijian.setOnClickListener(this);
         tv_mine.setOnClickListener(this);
-        tv_con.setOnClickListener(this);
+       // tv_con.setOnClickListener(this);
         iv_lanzi.setOnClickListener(this);
         iv_tuijian.setOnClickListener(this);
-       // iv_mine.setOnClickListener(this);
+        iv_mine.setOnClickListener(this);
       //  iv_con.setOnClickListener(this);
 
         vp = (ViewPager) findViewById(R.id.mainViewPager);
@@ -154,8 +154,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tuijian2= BitmapFactory.decodeResource(this.getResources(),R.drawable.tuijian2);
        // con1= BitmapFactory.decodeResource(this.getResources(),R.drawable.con1);
        // con2= BitmapFactory.decodeResource(this.getResources(),R.drawable.con2);
-        iv_con.setImageBitmap(con1);
-        iv_lanzi.setImageBitmap(lanzi2);
+        //iv_con.setImageBitmap(con1);
+        iv_lanzi.setImageBitmap(lanzi1);
         iv_tuijian.setImageBitmap(tuijian2);
         iv_mine.setImageBitmap(mine2);
     }
@@ -169,26 +169,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //    vp.setCurrentItem(0, true);
            //     break;
             case R.id.tv_lanzi:
-                vp.setCurrentItem(1, true);
+                vp.setCurrentItem(0, true);
                 lanzi_fargment.updateData();
                 break;
             case R.id.tv_tuijian:
-                vp.setCurrentItem(2, true);
+                vp.setCurrentItem(1, true);
                 break;
             case R.id.tv_mine:
-                vp.setCurrentItem(3, true);
+                vp.setCurrentItem(2, true);
                 break;
             //case R.id.iv_con:
                // vp.setCurrentItem(0, true);
                // break;
             case R.id.iv_lanzi:
-                vp.setCurrentItem(1, true);
+                vp.setCurrentItem(0, true);
                 break;
             case R.id.iv_tuijian:
-                vp.setCurrentItem(2, true);
+                vp.setCurrentItem(1, true);
                 break;
             case R.id.iv_mine:
-                vp.setCurrentItem(3, true);
+                vp.setCurrentItem(2, true);
                 break;
         }
     }

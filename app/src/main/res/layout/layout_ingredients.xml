@@ -9,6 +9,8 @@
         android:fontFamily="sans-serif"
         android:textColor="@color/black"
         android:layout_marginLeft="15dp"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
 
 </LinearLayout>

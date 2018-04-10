@@ -12,19 +12,19 @@ public class StaticData {
     static List<String> dishlist=new ArrayList<>();
     static long  totaldish_inbasket=0;
     static int lastdishnum=0;
-    void addIngredientsToBasket(IngredientsData newdata)
+   public static   void addIngredientsToBasket(IngredientsData newdata)
     {
         dishlist.add(newdata.getName());
         lastdishnum=getCount();
         IngredientsData.add(newdata);}
 
-    void RemoveIngredientsToBasket(IngredientsData newdata)
+    public static  void RemoveIngredientsToBasket(IngredientsData newdata)
     {
         dishlist.add(newdata.getName());
         lastdishnum=getCount();
         IngredientsData.add(newdata);}
 
-    public int getCount() {
+    public static   int getCount() {
         int count = 0;
             //  所有分类中item的总和是ListVIew  Item及header的总个数
             IngredientsData in;

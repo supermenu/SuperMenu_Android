@@ -90,6 +90,45 @@
         <item>姜:适量</item>
         <item>糖:适量</item>
     </string-array>
+    <string-array name="in7">
+        <item>白萝卜:1个</item>
+        <item>香菇:3朵</item>
+        <item>猪肉:250克</item>
+        <item>花生油:适量</item>
+        <item>胡椒粉:适量</item>
+        <item>盐:适量</item>
+        <item>砂糖:适量</item>
+        <item>葱:适量</item>
+        <item>生粉:适量</item>
+        <item>料酒:适量</item>
+        <item>蒜:1瓣</item>
+    </string-array>
+
+    <string-array name="in8">
+        <item>鸡翅:8个</item>
+        <item>可乐:300毫升</item>
+        <item>姜:两片</item>
+        <item>蒜:两瓣</item>
+        <item>柠檬:1片</item>
+        <item>酱油:1汤匙</item>
+        <item>盐:适量</item>
+    </string-array>
+    <string-array name="in9">
+        <item>鸡腿:一个</item>
+        <item>黄瓜:一根</item>
+        <item>辣椒:一把</item>
+        <item>花椒:适量</item>
+        <item>白芝麻:少许</item>
+        <item>葱:适量</item>
+        <item> 菜籽油:一勺</item>
+        <item> 料酒:一勺</item>
+        <item> 生抽:一勺</item>
+        <item> 白醋:一勺</item>
+        <item> 盐:一茶匙</item>
+        <item>味精:少许</item>
+        <item> 姜:适量</item>
+        <item>蒜:适量</item>
+    </string-array>
 
     <string-array name="steps0">
     <item>把买来的排骨洗净，飞水。</item>
@@ -178,6 +217,38 @@
         <item>下炸好的鸡块中小火炒匀</item>
         <item>放糖，盐，味精，颠翻炒匀装盘即可</item>
     </string-array>
+    <string-array name="steps7">
+        <item>猪肉剁成肉末，蒜剁成蓉，加入油、盐、料酒、胡椒粉、糖和生粉调好味</item>
+        <item>加入切成小粒的香菇，拌匀后，摔60下，起胶</item>
+        <item>弄成一个个小肉丸</item>
+        <item>萝卜去皮切细丝</item>
+        <item>锅里加油，加葱白，烧热</item>
+        <item>加入热水</item>
+        <item>加入肉丸，煮10分钟左右</item>
+        <item>加入萝卜丝,煮几分钟左右，加入盐调味</item>
+        <item>最后放葱花,盛起来即可</item>
+    </string-array>
+    <string-array name="steps8">
+        <item>鸡翅加姜丝、柠檬汁和少量盐拌匀腌制片刻</item>
+        <item>蒜拍碎</item>
+        <item>锅加热，放入鸡翅，皮朝下先煎一面</item>
+        <item>然后翻面煎，直到煎至两面金黄</item>
+        <item>锅中放入蒜末炒香</item>
+        <item>倒入可乐，加入酱油小火烧15分钟左右</item>
+        <item>最后转大火收汁即可出锅</item>
+    </string-array>
+    <string-array name="steps9">
+        <item>#鸡腿洗干净入锅，加入姜丝，水开后煮上20分钟，关火焖5分钟即可 </item>
+        <item> 鸡皮轻轻就可以褪下，切条，鸡肉手撕成条。</item>
+        <item>黄瓜去皮，用刀拍扁，切成小段。</item>
+        <item>盘中底层铺黄瓜，上层铺鸡丝。</item>
+        <item>辣椒和花椒用料理机打成粉</item>
+        <item>芝麻用干净的锅小火焙香。</item>
+        <item>锅内倒入适量的菜籽油，烧热。</item>
+        <item>待油温稍微回落一些，将油分三次倒入辣椒粉，用漏勺滤出红油。</item>
+        <item>红油加少许辣椒，加盐，味精，料酒，生抽，白醋，姜，蒜调成料汁</item>
+        <item>将料汁浇在鸡丝上，撒上芝麻葱花即可。</item>
+    </string-array>
 
     <string-array name="dish">
         <item>粉蒸排骨</item>
@@ -187,5 +258,8 @@
         <item>酱香牛肉</item>
         <item>鱼香茄子</item>
         <item>辣子鸡</item>
+        <item>萝卜丸子汤</item>
+        <item>可乐鸡翅</item>
+        <item>口水鸡</item>
     </string-array>
 </resources>

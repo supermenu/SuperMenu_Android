@@ -6,11 +6,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -36,7 +38,8 @@ public class LanziFragment extends Fragment {
 
     ListView IngredientsList;//材料布局listview，带有header和item
     IngredientsAdapter InAdapter;
-    PullToRefreshLayout pullrefresh;
+    SwipeRefreshLayout pullrefresh;
+    TextView emptyview;
     String get_ingredients;
     String get_dish;
     DataBase newdata;
@@ -92,83 +95,11 @@ public class LanziFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_lanzi, container, false);
-        IngredientsList = (ListView) view.findViewById(R.id.list);
         pullrefresh=view.findViewById(R.id.refresh);
-        pullrefresh.setRefreshListener(new BaseRefreshListener() {
-            @Override
-            public void refresh() {
-                final Thread tbase=new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        newdata = new DataBase();//连接池
-                        try {
-                            newdata.tbase.join();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        User u = new User("gyh", newdata);
-                        try {
-                            u.t1.join();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        get_dish = u.get_cooking();
-                        Log.v("dish", get_dish);
-                        Menu m = new Menu(get_dish, newdata);
-
-                        try {
-                            m.t2.join();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        get_ingredients = m.getIngredients();
-                        PutIngredients(get_dish, get_ingredients);
-//                        Log.v("getIngredients", get_ingredients);
-                        //System.out.println(m.getIngredients());
-                        String basket = getDishinBasket();
-                     //   Log.v("getDishinBasket", basket);
-                        u.setBasket(basket);
-                        u.finish();
-                        m.finish();
-                        newdata.finish();
-                    }
-                });
-                tbase.start();
-
-               new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 结束刷新
-                        try {
-                            tbase.join();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        InAdapter.notifyDataSetChanged();
-                        pullrefresh.finishRefresh();
-                    }
-                }, 0);
-                //pullrefresh.finishRefresh();
-            }
-
-            @Override
-            public void loadMore() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 结束加载更多
-                        pullrefresh.finishLoadMore();
-                    }
-                }, 2000);
-            }
-        });
-
-        //材料数据，材料信息+菜名
-        initDatas();
+        IngredientsList = (ListView) view.findViewById(R.id.list);
         //数组适配器，将itemlist的数据显示到ingredientslist
         InAdapter = new IngredientsAdapter(this.getActivity(), StaticData.IngredientsData);
         IngredientsList.setAdapter(InAdapter);
-
         IngredientsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -201,7 +132,81 @@ public class LanziFragment extends Fragment {
                 }
             }
         });
-       // updateData();
+        emptyview=view.findViewById(R.id.emptybasket);
+        IngredientsList.setEmptyView(emptyview);
+        IngredientsList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if(view!=null)
+                if(firstVisibleItem==0)
+                    if(view.getChildAt(0)!=null)
+                    if(view.getChildAt(0).getTop()>=0) {
+                        pullrefresh.setEnabled(true);
+                    }else
+                        pullrefresh.setEnabled(false);
+            }
+        });
+        pullrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                pullrefresh.setRefreshing(true);
+                final Thread tbase=new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        newdata = new DataBase();//连接池
+                        try {
+                            newdata.tbase.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        User u = new User("gyh", newdata);
+                        try {
+                            u.t1.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        get_dish = u.get_cooking();
+                        Log.v("dish", get_dish);
+                        Menu m = new Menu(get_dish, newdata);
+
+                        try {
+                            m.t2.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        get_ingredients = m.getIngredients();
+                        PutIngredients(get_dish, get_ingredients);
+                        String basket = getDishinBasket();
+                        u.setBasket(basket);
+                        u.finish();
+                        m.finish();
+                        newdata.finish();
+                    }
+                });
+                tbase.start();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 结束刷新
+                        try {
+                            tbase.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        InAdapter.notifyDataSetChanged();
+                        pullrefresh.setRefreshing(false);
+                    }
+                }, 0);
+            }
+        });
+        //材料数据，材料信息+菜名
+        updateData();
         return  view;
     }
 
@@ -213,9 +218,6 @@ public class LanziFragment extends Fragment {
         }
     }
 
-    private void initDatas() {
-        updateData();
-    }
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -268,14 +270,16 @@ public class LanziFragment extends Fragment {
                 }
             }
             String[] list = ingredientslist.split("#");
-            List<String> inlist = Arrays.asList(list);
+            String[] newlist=new String[list.length-1];
+            System.arraycopy(list,1,newlist,0,list.length-1);
+            List<String> inlist = Arrays.asList(newlist);
             IngredientsData newdish = new IngredientsData(name, inlist);
             StaticData.IngredientsData.add(newdish);
             StaticData.totaldish_inbasket++;
         }
     }
 
-    public  void fristfresh()
+    public void fristfresh()
     {
         final Thread tbase=new Thread(new Runnable() {
             @Override
@@ -314,7 +318,21 @@ public class LanziFragment extends Fragment {
             }
         });
         tbase.start();
+        try {
+            tbase.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
+   /* public  void fristfresh()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+    }*/
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

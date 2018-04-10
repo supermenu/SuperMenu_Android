@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -31,6 +32,8 @@ import android.widget.Toast;
 
 import com.github.ikidou.fragmentBackHandler.BackHandlerHelper;
 import com.github.ikidou.fragmentBackHandler.FragmentBackHandler;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Array;
@@ -65,6 +68,8 @@ public class TuijianFragment extends Fragment {
     RelativeLayout wrapper;
     FrameLayout toolbar;
     FragmentManager fm;
+    PullToRefreshLayout loadmore;
+    tuijianListAdapter adapter;
 
 
     //
@@ -113,7 +118,8 @@ public class TuijianFragment extends Fragment {
         sImageHeight = getResources().getDimensionPixelSize(R.dimen.height_image);
         initViews(view);
         setListData();
-        list_view.setAdapter(new tuijianListAdapter(this.getActivity(), R.layout.dishlist_item, listdata));
+        adapter=new tuijianListAdapter(this.getActivity(), R.layout.dishlist_item, listdata);
+        list_view.setAdapter(adapter);
         return view;
     }
 
@@ -125,6 +131,7 @@ public class TuijianFragment extends Fragment {
     }
     public void initViews(View v)
     {
+        loadmore=v.findViewById(R.id.loadmore);
         toolbar=v.findViewById(R.id.toolbar_list);
         wrapper=v.findViewById(R.id.wrapper);
         list_view=v.findViewById(R.id.list_view);
@@ -132,6 +139,49 @@ public class TuijianFragment extends Fragment {
            @Override
            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                showDetails((Map<String, Object>) parent.getItemAtPosition(position), view,position);
+           }
+       });
+       loadmore.setRefreshListener(new BaseRefreshListener() {
+           @Override
+           public void refresh() {
+               loadmore.finishRefresh();
+           }
+
+           @Override
+           public void loadMore() {
+               final  Thread load =new Thread(new Runnable() {
+                   @Override
+                   public void run() {
+                       Map<String, Object> Map;
+                       //图片id
+                       int[] avatars = {
+                               R.drawable.lbwanzitang,
+                               R.drawable.kelejichi,
+                               R.drawable.koushuiji,
+                       };
+                       //  String[] name =getResources().getStringArray(R.array.dish);
+                       for (int i = 0; i < avatars.length; i++) {
+                           Map = new HashMap<>();
+                           Map.put("image", avatars[i]);
+                           listdata.add(Map);
+                       }
+                       adapter.notifyDataSetChanged();
+                   }
+               });
+               load.start();
+               new Handler().postDelayed(new Runnable() {
+                   @Override
+                   public void run() {
+                       // 结束加载更多
+                       try {
+                           load.join();
+                       } catch (InterruptedException e) {
+                           e.printStackTrace();
+                       }
+                       loadmore.finishLoadMore();
+                   }
+               }, 0);
+
            }
        });
     }

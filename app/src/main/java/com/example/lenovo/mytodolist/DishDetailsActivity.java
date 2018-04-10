@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class DishDetailsActivity extends Activity {
     RelativeLayout toolbar_details;
     ScrollView sv_details;
     List<DishData> dish_data;
+    DataBase newadd;
     int pos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +71,10 @@ public class DishDetailsActivity extends Activity {
             public void onClick(View v) {
                 int length = dish_data.get(pos).getIngredients().size();
                 String dish_name = dish_data.get(pos).getDish_name();
-                StaticData.IngredientsData.add(new IngredientsData( dish_name, dish_data.get(pos).getIngredients()));
-                StaticData.totaldish_inbasket++;
-                Toast.makeText(DishDetailsActivity.this,"已丢进菜篮子",Toast.LENGTH_SHORT).show();
+                StaticData.addIngredientsToBasket(new IngredientsData( dish_name, dish_data.get(pos).getIngredients()));
+                Toast.makeText(DishDetailsActivity.this,"已丢进菜篮子",Toast.LENGTH_LONG).show();
+                fristfresh();
+                Toast.makeText(DishDetailsActivity.this,"已丢进菜篮子",Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -93,6 +96,14 @@ public class DishDetailsActivity extends Activity {
                 (R.array.in5),getResources().getStringArray(R.array.steps5) ));
         dish_data.add(new DishData("辣子鸡","简单","中辣","半小时","炸",getResources().getStringArray
                 (R.array.in6),getResources().getStringArray(R.array.steps6) ));
+        dish_data.add(new DishData("萝卜丸子汤","简单","清淡","半小时","煮",getResources().getStringArray
+                (R.array.in7),getResources().getStringArray(R.array.steps7) ));
+        dish_data.add(new DishData("可乐鸡翅","普通","咸鲜","半小时","烧",getResources().getStringArray
+                (R.array.in8),getResources().getStringArray(R.array.steps8) ));
+        dish_data.add(new DishData("口水鸡","普通","麻辣","二十分钟","煮",getResources().getStringArray
+                (R.array.in9),getResources().getStringArray(R.array.steps9) ));
+
+
     }
 
     public void setDishDetails(int position)
@@ -107,6 +118,9 @@ public class DishDetailsActivity extends Activity {
                 R.drawable.jxniurou2,
                 R.drawable.yxqiezi2,
                 R.drawable.laziji2,
+                R.drawable.lbwanzitang2,
+                R.drawable.kelejichi2,
+                R.drawable.kelejichi2,
         };
         //加载对应菜谱图片
         Picasso.with(DishDetailsActivity.this).load(avatars[position])
@@ -139,6 +153,51 @@ public class DishDetailsActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
+    public void fristfresh()
+    {
+
+        final Thread tbase=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                newadd = new DataBase();//连接池
+                try {
+                    newadd.tbase.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                User u = new User("gyh", newadd);
+                try {
+                    u.t1.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                String basket = getDishinBasket();
+                //   Log.v("getDishinBasket", basket);
+                u.setBasket(basket);
+                u.finish();
+                newadd.finish();
+            }
+        });
+        tbase.start();
+        try {
+            tbase.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getDishinBasket()
+    {
+        int num = StaticData.IngredientsData.size();
+        String dishinbasket = new String("");
+        for (int i=0;i<num;i++)
+        {
+            dishinbasket=dishinbasket+"#"+StaticData.IngredientsData.get(i).getName();
+        }
+        return dishinbasket;
+    }
+
+
 
 }
 
@@ -162,5 +221,7 @@ class UIHelper {
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
     }
+
+
 }
 
