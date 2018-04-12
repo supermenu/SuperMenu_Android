@@ -42,7 +42,7 @@ public class LanziFragment extends Fragment {
     TextView emptyview;
     String get_ingredients;
     String get_dish;
-    DataBase newdata;
+    //DataBase newdata;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -158,34 +158,39 @@ public class LanziFragment extends Fragment {
                 final Thread tbase=new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        newdata = new DataBase();//连接池
-                        try {
+                       // newdata = new DataBase();//连接池
+                       /* try {
                             newdata.tbase.join();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
-                        }
-                        User u = new User("gyh", newdata);
+                        }*/
+                        User u = new User(StaticData.username, StaticData.datapool);
                         try {
                             u.t1.join();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        get_dish = u.get_cooking();
-                        Log.v("dish", get_dish);
-                        Menu m = new Menu(get_dish, newdata);
+                        get_dish = u.get_basket();
+                        if(get_dish!=null) {
+                            if (StaticData.dishlist.size()<=0||get_dish != StaticData.dishlist.get
+                                    (0)) {
+                                Menu m = new Menu(get_dish, StaticData.datapool);
 
-                        try {
-                            m.t2.join();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                                try {
+                                    m.t2.join();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                get_ingredients = m.getIngredients();
+                                PutIngredients(get_dish, get_ingredients);
+                                m.finish();
+                            }
                         }
-                        get_ingredients = m.getIngredients();
-                        PutIngredients(get_dish, get_ingredients);
-                        String basket = getDishinBasket();
-                        u.setBasket(basket);
+                       // String basket = getDishinBasket();
+                       // u.setBasket(basket);
                         u.finish();
-                        m.finish();
-                        newdata.finish();
+
+                        //newdata.finish();
                     }
                 });
                 tbase.start();
@@ -274,8 +279,7 @@ public class LanziFragment extends Fragment {
             System.arraycopy(list,1,newlist,0,list.length-1);
             List<String> inlist = Arrays.asList(newlist);
             IngredientsData newdish = new IngredientsData(name, inlist);
-            StaticData.IngredientsData.add(newdish);
-            StaticData.totaldish_inbasket++;
+            StaticData.addIngredientsToBasket(newdish);
         }
     }
 
@@ -284,37 +288,37 @@ public class LanziFragment extends Fragment {
         final Thread tbase=new Thread(new Runnable() {
             @Override
             public void run() {
-                newdata = new DataBase();//连接池
+               // newdata = new DataBase();//连接池
+                StaticData.datapool= new DataBase();//连接池
                 try {
-                    newdata.tbase.join();
+                    StaticData.datapool.tbase.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                User u = new User("gyh", newdata);
+                User u = new User(StaticData.username,StaticData.datapool);
                 try {
                     u.t1.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                get_dish = u.get_cooking();
-                Log.v("dish", get_dish);
-                Menu m = new Menu(get_dish, newdata);
-
-                try {
-                    m.t2.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                get_dish = u.get_basket();
+                if(get_dish!=null)
+                    if (StaticData.dishlist.size()<=0||get_dish != StaticData.dishlist.get(0)){
+                        Menu m = new Menu(get_dish, StaticData.datapool);
+                        try {
+                            m.t2.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        get_ingredients = m.getIngredients();
+                        PutIngredients(get_dish, get_ingredients);
+                        m.finish();
                 }
-                get_ingredients = m.getIngredients();
-                PutIngredients(get_dish, get_ingredients);
-//                        Log.v("getIngredients", get_ingredients);
-                //System.out.println(m.getIngredients());
-                String basket = getDishinBasket();
+                //String basket = getDishinBasket();
                 //   Log.v("getDishinBasket", basket);
-                u.setBasket(basket);
+                //u.setBasket(basket);
                 u.finish();
-                m.finish();
-                newdata.finish();
+                //newdata.finish();
             }
         });
         tbase.start();
@@ -324,15 +328,7 @@ public class LanziFragment extends Fragment {
             e.printStackTrace();
         }
     }
-   /* public  void fristfresh()
-    {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
 
-            }
-        });
-    }*/
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

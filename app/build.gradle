@@ -43,7 +43,7 @@ dependencies {
     compile 'com.github.ikidou:FragmentBackHandler:2.1'
     compile 'com.android.support:cardview-v7:26.+'
     compile 'com.jwenfeng.pulltorefresh:library:1.0.3'
-    implementation files('libs/mysql-connector-java-5.1.45-bin.jar')
+    implementation files('libs/mysql-connector-java-5.1.46-bin.jar')
 }
 
 MobSDK {

@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //获得用户名字符串
        // Intent intent =getIntent();
        // username=intent.getStringExtra("username");
+        StaticData.username=new String(this.username);
         initViews();
         Message msg = new Message();
         msg.what = STOP_SPLASH;
@@ -268,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
+        StaticData.datapool.finish();
         if (!lanzi1.isRecycled())
             lanzi1.recycle();
         if (!lanzi2.isRecycled())

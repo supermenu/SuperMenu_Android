@@ -56,7 +56,7 @@ public class DataBase {
 class User {
     public String username = null;
     public String password_hash = null;
-    public String cooking_dish = null;
+    public String basket_dish = null;
 
     public DataBase dataBase = null;
     public Connection conn = null;
@@ -112,26 +112,21 @@ class User {
         return true;
     }
 
-    public String get_cooking() {
-      /*  while(conn == null) {
-            try {
-                wait(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }*/
+    public String get_basket() {
+
         // 获取正在做的菜
         try {
-            rs = st.executeQuery(String.format(get_value_sql, "cooking", "username", this
+            rs = st.executeQuery(String.format(get_value_sql, "basket", "username", this
                     .username));
-           while (rs.next())
-            cooking_dish = new String(rs.getString(1));
+           while (rs.next()) {
+               basket_dish = rs.getString(1);
+           }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return cooking_dish;
+        return basket_dish;
     }
-
+/*
     public Boolean is_cooking() {
         // 判断是否在做菜
         this.cooking_dish = get_cooking();
@@ -139,20 +134,16 @@ class User {
             return false;
         else
             return true;
-    }
+    }*/
 
     public void setBasket(String dishes) {
-       /* while(conn == null) {
-            try {
-                t1.wait(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }*/
         // 将菜篮子的菜放入数据库
         try {
-            //更新语句，应该用statement的execute()方法
-            st.execute(String.format(set_value_sql, "users", dishes, this.username));
+        //    if(dishes==null)
+          //      st.execute(String.format("UPDATE users SET basket=null WHERE username='%s'",this
+            //            .username));
+            //else//更新语句，应该用statement的execute()方法
+                st.execute(String.format(set_value_sql, "users", dishes, this.username));
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -30,12 +30,12 @@ public class IngredientsAdapter extends BaseAdapter {
     private static final int TYPE_ITEM = 1;
     private LayoutInflater inflater;
 
-    private List<IngredientsData> mListData;
+    //private List<IngredientsData> mListData;
     //private
 
     public IngredientsAdapter(Activity context, List<IngredientsData> Data){
         inflater = LayoutInflater.from(context);
-        mListData = Data;
+       // mListData = Data;
     }
 
 
@@ -43,11 +43,11 @@ public class IngredientsAdapter extends BaseAdapter {
     public int getCount() {
         int count = 0;
 
-        if (null != mListData) {
+        if (null != StaticData.IngredientsData) {
             //  所有分类中item的总和是ListVIew  Item及header的总个数
             IngredientsData in;
-            for (int i=0;i< mListData.size();i++) {
-                in=mListData.get(i);
+            for (int i=0;i< StaticData.IngredientsData.size();i++) {
+                in=StaticData.IngredientsData.get(i);
                 count += in.getItemCount();
             }
         }
@@ -59,15 +59,15 @@ public class IngredientsAdapter extends BaseAdapter {
     public Object getItem(int position) {
 
         // 异常情况处理
-        if (null == mListData || position <  0|| position > getCount()) {
+        if (null == StaticData.IngredientsData || position <  0|| position > getCount()) {
             return null;
         }
 
         // 同一分类内，第一个元素的索引值
         int ingredientsHeaderIndex = 0;
         IngredientsData in;
-        for (int i=0;i< mListData.size();i++) {
-            in=mListData.get(i);
+        for (int i=0;i< StaticData.IngredientsData.size();i++) {
+            in=StaticData.IngredientsData.get(i);
             int size = in.getItemCount();
             // 在当前分类中的索引值
             int ingredientsIndex = position - ingredientsHeaderIndex;
@@ -86,15 +86,15 @@ public class IngredientsAdapter extends BaseAdapter {
     public IngredientsData getIngredients(int position) {
 
         // 异常情况处理
-        if (null == mListData || position <  0|| position > getCount()) {
+        if (null == StaticData.IngredientsData || position <  0|| position > getCount()) {
             return null;
         }
 
         // 同一分类内，第一个元素的索引值
         int ingredientsHeaderIndex = 0;
         IngredientsData in;
-        for (int i=0;i< mListData.size();i++) {
-            in=mListData.get(i);
+        for (int i=0;i< StaticData.IngredientsData.size();i++) {
+            in=StaticData.IngredientsData.get(i);
             int size = in.getItemCount();
             // 在当前分类中的索引值
             int ingredientsIndex = position - ingredientsHeaderIndex;
@@ -112,15 +112,15 @@ public class IngredientsAdapter extends BaseAdapter {
     public int getItemPositioninList(int position) {
 
         // 异常情况处理
-        if (null == mListData || position <  0|| position > getCount()) {
+        if (null == StaticData.IngredientsData || position <  0|| position > getCount()) {
             return -1;
         }
 
         // 同一分类内，第一个元素的索引值
         int ingredientsHeaderIndex = 0;
         IngredientsData in;
-        for (int i=0;i< mListData.size();i++) {
-            in=mListData.get(i);
+        for (int i=0;i< StaticData.IngredientsData.size();i++) {
+            in=StaticData.IngredientsData.get(i);
             int size = in.getItemCount();
             // 在当前分类中的索引值
             int ingredientsIndex = position - ingredientsHeaderIndex;
@@ -139,15 +139,15 @@ public class IngredientsAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         // 异常情况处理
-        if (null == mListData || position <  0|| position > getCount()) {
+        if (null == StaticData.IngredientsData || position <  0|| position > getCount()) {
             return TYPE_ITEM;
         }
 
 
         int ingredinetsFirstIndex = 0;
         IngredientsData temp;
-        for (int i=0;i< mListData.size();i++) {
-            temp=mListData.get(i);
+        for (int i=0;i< StaticData.IngredientsData.size();i++) {
+            temp=StaticData.IngredientsData.get(i);
             int size = temp.getItemCount();
             // 在当前分类中的索引值
             int ingredinetsIndex = position - ingredinetsFirstIndex;
@@ -158,6 +158,7 @@ public class IngredientsAdapter extends BaseAdapter {
             ingredinetsFirstIndex += size;
         }
 
+
         return TYPE_ITEM;
     }
 
@@ -167,14 +168,37 @@ public class IngredientsAdapter extends BaseAdapter {
         int ingredientsHeaderIndex = 0;
         int headerinderx=0;
         IngredientsData in;
-        for (int i=0;i< mListData.size();i++) {
-            in=mListData.get(i);
+        for (int i=0;i< StaticData.IngredientsData.size();i++) {
+            in=StaticData.IngredientsData.get(i);
             int size = in.getItemCount();
             // 在当前分类中的索引值
-            int ingredientsIndex = position - ingredientsHeaderIndex;
+            final int ingredientsIndex = position - ingredientsHeaderIndex;
             // item在当前分类内
             if (ingredientsIndex ==0) {
-                    mListData.remove( headerinderx);
+                final Thread tbase=new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (ingredientsIndex == 0)//删除第一个
+                        {
+                            User u = new User(StaticData.username, StaticData.datapool);
+                            try {
+                                u.t1.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            u.setBasket("");
+                            u.finish();
+                        }
+                    }
+                });
+                tbase.start();
+
+                try {
+                    tbase.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                StaticData.removeIngredientsFromBasket( headerinderx);
                     return;
             }
 
@@ -228,13 +252,13 @@ public class IngredientsAdapter extends BaseAdapter {
         }
         int ingredientsHeaderIndex = 0;
 
-        IngredientsData in=mListData.get(0);
+        IngredientsData in=StaticData.IngredientsData.get(0);
         switch (type){
             case TYPE_Header:
                ingredientsHeaderIndex = 0;
-                 in=mListData.get(0);
-                for (int i=0;i< mListData.size();i++) {
-                    in=mListData.get(i);
+                 in=StaticData.IngredientsData.get(0);
+                for (int i=0;i< StaticData.IngredientsData.size();i++) {
+                    in=StaticData.IngredientsData.get(i);
                     int size = in.getItemCount();
                     // 在当前分类中的索引值
                     // item在当前分类内
@@ -265,9 +289,9 @@ public class IngredientsAdapter extends BaseAdapter {
                 // 同一分类内，第一个元素的索引值
                ingredientsHeaderIndex = 0;
                 int ingredientsIndex=0;
-                 in=in=mListData.get(0);
-                for (int i=0;i< mListData.size();i++) {
-                    in=mListData.get(i);
+                 in=StaticData.IngredientsData.get(0);
+                for (int i=0;i< StaticData.IngredientsData.size();i++) {
+                    in=StaticData.IngredientsData.get(i);
                     int size = in.getItemCount();
                     // 在当前分类中的索引值
                     ingredientsIndex = position - ingredientsHeaderIndex;

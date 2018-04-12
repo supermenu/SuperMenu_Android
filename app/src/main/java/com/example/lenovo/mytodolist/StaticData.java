@@ -8,21 +8,22 @@ import java.util.List;
  */
 
 public class StaticData {
-    static List<IngredientsData> IngredientsData=new ArrayList<>();
-    static List<String> dishlist=new ArrayList<>();
+    static ArrayList<IngredientsData> IngredientsData=new ArrayList<>();
+    static ArrayList<String> dishlist=new ArrayList<>();
     static long  totaldish_inbasket=0;
     static int lastdishnum=0;
-   public static   void addIngredientsToBasket(IngredientsData newdata)
-    {
-        dishlist.add(newdata.getName());
-        lastdishnum=getCount();
-        IngredientsData.add(newdata);}
+    static DataBase datapool;
+    static String username;
+   public static   void addIngredientsToBasket(IngredientsData newdata) {
+       dishlist.add(0, newdata.getName());
+       //lastdishnum = getCount();
+       IngredientsData.add(0, newdata);
+   }
+   public static  void removeIngredientsFromBasket(int index){
+       dishlist.remove(index);
+       IngredientsData.remove(index);
+   }
 
-    public static  void RemoveIngredientsToBasket(IngredientsData newdata)
-    {
-        dishlist.add(newdata.getName());
-        lastdishnum=getCount();
-        IngredientsData.add(newdata);}
 
     public static   int getCount() {
         int count = 0;

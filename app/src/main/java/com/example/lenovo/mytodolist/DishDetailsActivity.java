@@ -31,7 +31,7 @@ public class DishDetailsActivity extends Activity {
     RelativeLayout toolbar_details;
     ScrollView sv_details;
     List<DishData> dish_data;
-    DataBase newadd;
+  //  DataBase newadd;
     int pos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +69,33 @@ public class DishDetailsActivity extends Activity {
         add_intobaskaet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int length = dish_data.get(pos).getIngredients().size();
-                String dish_name = dish_data.get(pos).getDish_name();
+                User u = new User(StaticData.username, StaticData.datapool);
+                try {
+                    u.t1.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+             /* String get_dish = u.get_basket();
+                if( get_dish==null||get_dish.equals("")){
+                    if(StaticData.dishlist.size()>0)
+                    StaticData.removeIngredientsFromBasket();
+                }*/
+                int num=StaticData.dishlist.size();
+                String dish_name=dish_data.get(pos).getDish_name();
+                if(StaticData.dishlist.size()>0)
+                for (int i = 0; i < num; i++) {
+                   String checkname = StaticData.IngredientsData.get(i).getName();
+                    Boolean flag=dish_name.equals(checkname);
+                    if (flag)
+                    {
+                        Toast.makeText(getApplicationContext(), dish_name + "已存在于菜篮子", Toast
+                                .LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                Toast.makeText(DishDetailsActivity.this,"已丢进菜篮子",Toast.LENGTH_LONG).show();
                 StaticData.addIngredientsToBasket(new IngredientsData( dish_name, dish_data.get(pos).getIngredients()));
-                Toast.makeText(DishDetailsActivity.this,"已丢进菜篮子",Toast.LENGTH_LONG).show();
                 fristfresh();
-                Toast.makeText(DishDetailsActivity.this,"已丢进菜篮子",Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -159,23 +180,21 @@ public class DishDetailsActivity extends Activity {
         final Thread tbase=new Thread(new Runnable() {
             @Override
             public void run() {
-                newadd = new DataBase();//连接池
-                try {
+               // newadd = new DataBase();//连接池
+                /*try {
                     newadd.tbase.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
-                User u = new User("gyh", newadd);
+                }*/
+                User u = new User(StaticData.username, StaticData.datapool);
                 try {
                     u.t1.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 String basket = getDishinBasket();
-                //   Log.v("getDishinBasket", basket);
                 u.setBasket(basket);
                 u.finish();
-                newadd.finish();
             }
         });
         tbase.start();
@@ -189,11 +208,9 @@ public class DishDetailsActivity extends Activity {
     public String getDishinBasket()
     {
         int num = StaticData.IngredientsData.size();
-        String dishinbasket = new String("");
-        for (int i=0;i<num;i++)
-        {
-            dishinbasket=dishinbasket+"#"+StaticData.IngredientsData.get(i).getName();
-        }
+        String dishinbasket=null;
+        if(StaticData.dishlist.size()>0)
+            dishinbasket = StaticData.dishlist.get(0);
         return dishinbasket;
     }
 
