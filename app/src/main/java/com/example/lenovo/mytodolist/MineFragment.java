@@ -143,12 +143,18 @@ public class MineFragment extends Fragment {
         energy.setProgress(rate_e);
         axunge.setProgress(rate_a);
         protein.setProgress(rate_p);
-        if(rate_a>=100)
+        if(rate_a>=100){
             axunge.setReachedBarColor(R.color.red);
-        if(rate_e>=100)
+            axunge.setProgressTextColor(R.color.red);
+        }
+        if(rate_e>=100){
             energy.setReachedBarColor(R.color.red);
-        if(rate_p>=100)
+            energy.setProgressTextColor(R.color.red);
+        }
+        if(rate_p>=100) {
             protein.setReachedBarColor(R.color.red);
+            protein.setProgressTextColor(R.color.red);
+        }
        return view;
     }
 
@@ -434,6 +440,9 @@ public class MineFragment extends Fragment {
                 rate_a=(int)(axunge/user_a*100);
                 rate_e=(int)(energy/user_e*100);
                 rate_p=(int)(protein/user_p*100);
+                if(rate_a>100) rate_a=100;
+                if(rate_e>100) rate_e=100;
+                if(rate_p>100) rate_p=100;
 
             }
         });
