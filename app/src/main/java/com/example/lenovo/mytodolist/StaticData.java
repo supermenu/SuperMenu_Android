@@ -14,6 +14,8 @@ public class StaticData {
     static int lastdishnum=0;
     static DataBase datapool;
     static String username;
+    static int age;
+    static char sex;
    public static   void addIngredientsToBasket(IngredientsData newdata) {
        dishlist.add(0, newdata.getName());
        //lastdishnum = getCount();

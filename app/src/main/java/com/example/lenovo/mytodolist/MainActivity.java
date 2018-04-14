@@ -1,15 +1,20 @@
 package com.example.lenovo.mytodolist;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -50,6 +55,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     LinearLayout splash;
     private final int STOP_SPLASH = 0;
     private final int SPLASH_TIME = 3000;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
 
     @Override
@@ -64,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        // username=intent.getStringExtra("username");
         StaticData.username=new String(this.username);
         initViews();
+        getpermission();
         Message msg = new Message();
         msg.what = STOP_SPLASH;
         mFragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), mFragmentList);
@@ -128,13 +139,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         vp = (ViewPager) findViewById(R.id.mainViewPager);
        // conversation_fargment = new ConFragment();
         lanzi_fargment= new LanziFragment();
-        lanzi_fargment.fristfresh();
         recommand_fargment = new TuijianFragment();
         mine_fargment = new MineFragment();
-        //向我的页面传递用户名字符串
-        Bundle userb=new Bundle();
-        userb.putString("username",username);
-        mine_fargment.setArguments(userb);
+        //无需向我的页面传递用户名字符串，直接从staticdata获取
+       // Bundle userb=new Bundle();
+        //userb.putString("username",username);
+       // mine_fargment.setArguments(userb);
         //给FragmentList添加数据，即添加在viewpager中
        // mFragmentList.add(conversation_fargment);
         mFragmentList.add(lanzi_fargment);
@@ -320,6 +330,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super.handleMessage(msg);
         }
     };
+
+    private void getpermission()
+    {
+        int hasWriteContactsPermission = ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);//android.manifest.xml
+        if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                Log.d("yx","get permission");
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        PERMISSIONS_STORAGE,
+                        REQUEST_EXTERNAL_STORAGE);
+
+
+            }
+            Log.d("yx","get permission2");
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE);
+
+        }
+
+        Log.d("yx","wait for PERMISSION_GRANTED");
+        while (( ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE))!= PackageManager.PERMISSION_GRANTED) {
+
+        }
+        Log.d("yx","wait for PERMISSION_GRANTED finish");
+    }
 
 }
 

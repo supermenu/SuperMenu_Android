@@ -90,6 +90,9 @@ public class loginActivity extends AppCompatActivity {
             /*
             d登陆成功，启动主activity
              */
+            //密码比对成功后需要将用户名传给StaticData
+            // 同时去掉MainActivity中username的默认小羊苏珊，以及MainActivity对StaticData的初始化
+            //StaticData.username=new String(this.loginname);
             Intent intent=new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             //参数是包名，类全限定名，注意直接用类名不行

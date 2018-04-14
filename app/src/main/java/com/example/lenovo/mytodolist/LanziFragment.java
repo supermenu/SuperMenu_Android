@@ -212,6 +212,7 @@ public class LanziFragment extends Fragment {
         });
         //材料数据，材料信息+菜名
         updateData();
+        fristfresh();
         return  view;
     }
 
@@ -270,7 +271,8 @@ public class LanziFragment extends Fragment {
                 Boolean flag=name.equals(dishname);
                 if (flag)
                 {
-                    Toast.makeText(getActivity(), dishname + "已存在于菜篮子", Toast.LENGTH_SHORT);
+                     Toast.makeText(LanziFragment.this.getActivity(), dishname + "已存在于菜篮子", Toast
+                             .LENGTH_SHORT);
                     return;
                 }
             }
