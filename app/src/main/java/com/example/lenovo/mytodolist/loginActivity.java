@@ -56,7 +56,6 @@ public class loginActivity extends AppCompatActivity {
     }
 
     public void register(){
-
             /*
             启动registeractivity，注册界面
              */
@@ -70,13 +69,39 @@ public class loginActivity extends AppCompatActivity {
 
     }
 
-    //密码比对//
+    public void login_succeed(){
+        /*
+         * 登陆成功，启动主activity
+         *
+         * 密码比对成功后需要将用户名传给StaticData同时去掉MainActivity中username的默认小羊苏珊
+         *
+         * 以及MainActivity对StaticData的初始化
+         */
+        StaticData.username = new String(this.loginname);
+        Intent intent=new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        //参数是包名，类全限定名，注意直接用类名不行
+        ComponentName cn=new ComponentName("com.example.lenovo.mytodolist",
+                "com.example.lenovo.mytodolist.MainActivity");
+        intent.setComponent(cn);
+        //传递用户名字符串
+        intent.putExtra("username",name);
+        startActivity(intent);
+        finish();
+    }
+
+    public void login_fail(){
+
+        Toast toast=Toast.makeText(getApplicationContext(),"登录失败",Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
     class ButtonClickListener implements View.OnClickListener{
         public void onClick(View view){
             name=et_userName.getText().toString();
             pwd=et_password.getText().toString();
 
-            Thread thread = new Thread(new Runnable() {
+/*            Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     StaticData.datapool= new DataBase();//连接池
@@ -93,48 +118,21 @@ public class loginActivity extends AppCompatActivity {
                     }
                 }
             });
-            thread.start();
-            if(user.verify_password(pwd)){
-                login_succeed();
-            }
-            if(name.equals("admin")&&pwd.equals("123456")) {
-                loginname=name;//获得用户名
-                login_succeed();
-            }
-            else
-                login_fail();//登陆失败出现提示
+            thread.start();*/
+            user = new User(name,StaticData.datapool);
+
             if(name.equals("")||pwd.equals(""))
             {
                 Toast toast=Toast.makeText(getApplicationContext(),"请先输入",Toast.LENGTH_SHORT);
                 toast.show();
             }
-
-        }
-        public void login_succeed(){
-            /*
-               登陆成功，启动主activity
-             */
-            //密码比对成功后需要将用户名传给StaticData
-            // 同时去掉MainActivity中username的默认小羊苏珊，以及MainActivity对StaticData的初始化
-            //StaticData.username=new String(this.loginname);
-            Intent intent=new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            //参数是包名，类全限定名，注意直接用类名不行
-            ComponentName cn=new ComponentName("com.example.lenovo.mytodolist",
-                    "com.example.lenovo.mytodolist.MainActivity");
-            intent.setComponent(cn);
-            //传递用户名字符串
-            intent.putExtra("username",name);
-            startActivity(intent);
-            finish();
-
-        }
-
-
-        public void login_fail(){
-
-            Toast toast=Toast.makeText(getApplicationContext(),"登录失败",Toast.LENGTH_SHORT);
-            toast.show();
+            if(user.verify_password(pwd)){
+                loginname = name;
+                login_succeed();
+            }
+            else {
+                login_fail();//登陆失败出现提示
+            }
         }
     }
 
