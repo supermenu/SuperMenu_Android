@@ -2,6 +2,9 @@ package com.example.lenovo.mytodolist;
 
 import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,7 +46,7 @@ public class User {
             }
         });
         t1.start();
-
+        this.password_hash = getPassword_hash();
     }
 
     public String getPassword_hash() {
@@ -59,15 +62,28 @@ public class User {
         return hash_password;
     }
 
+    /*
+     * 验证密码,服务器采用MD5方式加密。
+     * 计算待验证的密码的MD5值，和数据库中的Hash密码对比
+     *
+     * */
     public Boolean verify_password(String password) {
-        // 验证密码
         if (this.password_hash == null)
             return false;
-        /*
-		 * 这部分需要python的去验证密码， 需要通过服务器完成。
-		 *
-		 */
-        return true;
+        try{
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(password.getBytes("UTF-8"));
+            String password_MD5 = byteArrayToHex(messageDigest.digest());
+            if(password_MD5 == password_hash)
+                return true;
+            else
+                return false;
+        }catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public String get_basket() {
@@ -157,5 +173,20 @@ public class User {
     public void finish() {
         dataBase.connPool.returnConnection(conn);
 
+    }
+
+
+    //二进制转十六进制字符串
+    public static String byteArrayToHex(byte[] byteArray){
+        String resultCharArray = "";
+        String tempCharArray = "";
+        for(int n = 0;n < byteArray.length;n++){
+            tempCharArray = (java.lang.Integer.toHexString(byteArray[n] & 0XFF));
+            if (tempCharArray.length()==1)
+                resultCharArray += "0" + tempCharArray;
+            else
+                resultCharArray += tempCharArray;
+        }
+        return resultCharArray.toLowerCase();
     }
 }
