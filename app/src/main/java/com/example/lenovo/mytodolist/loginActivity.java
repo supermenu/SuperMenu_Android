@@ -20,6 +20,7 @@ public class loginActivity extends AppCompatActivity {
     CheckBox cb_checkbox;
     ImageView iv_pwdClear,iv_unameClear;
     Button login;
+    User user;
     String loginname;
     TextView re;
     String name;
@@ -44,6 +45,7 @@ public class loginActivity extends AppCompatActivity {
         login=(Button)findViewById(R.id.btn_login) ;
         et_userName.setText("admin");
         et_password.setText("123456");
+        user = null;
         login.setOnClickListener(new ButtonClickListener());
         /*
         当editview输入时，出现删除按钮，可以点击清空
@@ -73,6 +75,28 @@ public class loginActivity extends AppCompatActivity {
         public void onClick(View view){
             name=et_userName.getText().toString();
             pwd=et_password.getText().toString();
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    StaticData.datapool= new DataBase();//连接池
+                    try {
+                        StaticData.datapool.tbase.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    user = new User(StaticData.username,StaticData.datapool);
+                    try {
+                        user.t1.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
+            if(user.verify_password(pwd)){
+                login_succeed();
+            }
             if(name.equals("admin")&&pwd.equals("123456")) {
                 loginname=name;//获得用户名
                 login_succeed();
@@ -88,7 +112,7 @@ public class loginActivity extends AppCompatActivity {
         }
         public void login_succeed(){
             /*
-            d登陆成功，启动主activity
+               登陆成功，启动主activity
              */
             //密码比对成功后需要将用户名传给StaticData
             // 同时去掉MainActivity中username的默认小羊苏珊，以及MainActivity对StaticData的初始化

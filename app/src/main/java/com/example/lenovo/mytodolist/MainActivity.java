@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //设置xml
         setContentView(R.layout.activity_main);
         //获得用户名字符串
-       // Intent intent =getIntent();
-       // username=intent.getStringExtra("username");
+        Intent intent =getIntent();
+        username=intent.getStringExtra("username");
         StaticData.username=new String(this.username);
         initViews();
         getpermission();
