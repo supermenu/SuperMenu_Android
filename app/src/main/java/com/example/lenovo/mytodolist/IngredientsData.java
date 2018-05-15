@@ -4,6 +4,7 @@ package com.example.lenovo.mytodolist;
  * Created by lenovo on 2018/3/16.
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,28 +16,34 @@ import java.util.List;
 
 public class IngredientsData {
 
-    long dish_id;//材料所属菜的id
     String name;//菜名
-    List<String> ingredient;//材料名+用量
+    String[] ingredient;//材料名+用量
     int[] status;
     int header_status=0;
-    IngredientsData(String n,List<String> ingre)
+
+    IngredientsData(String n, int[] status)
     {
 
-        this.dish_id= StaticData.totaldish_inbasket;
+        name = n;
+        this.status = status;
+        /*this.status=new int[status.length];
+        for(int i=0;i<status.length;i++)
+            this.status[i]=status[i];*/
+    }
+
+    IngredientsData(String n, String[] ingre) {
+
         name = new String(n);
         ingredient = ingre;
-        status=new int[ingre.size()];
+        status = new int[ingre.length];
     }
-    IngredientsData( long dish_id)
-    {
-        this.dish_id=dish_id;
-    }
+
     String getName()
     {
         return name;
     }
-    List<String> getIngredient(){
+
+    String[] getIngredient() {
         return ingredient;
     }
 
@@ -47,11 +54,8 @@ public class IngredientsData {
         name = new String(n);
     }
 
-   long getDish_id()
-    {
-        return dish_id;
-    }
-    void setIngredients(List<String> ingre)
+
+    void setIngredients(String[] ingre)
     {
         ingredient=ingre;
     }
@@ -59,7 +63,7 @@ public class IngredientsData {
 
     int getItemCount()
     {
-        return ingredient.size()+1;
+        return ingredient.length + 1;
     }
 
     public String getItem(int pPosition) {
@@ -67,10 +71,17 @@ public class IngredientsData {
         if (pPosition == 0) {
             return name;
         } else {
-            return ingredient.get(pPosition - 1);
+            return ingredient[pPosition - 1];
         }
     }
 
+    public int[] getStatus() {
+        return status;
+    }
+
+    public void setStatus(int[] status) {
+        this.status = new int[status.length];
+    }
     public  int getStatus(int index)
     {
         return status[index];

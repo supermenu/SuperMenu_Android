@@ -24,7 +24,7 @@ public class User {
     public Statement st = null;
     public ResultSet rs = null;
 
-    public String get_user_sql = "SELECT * FROM user WHERE %s='%s'";
+    public String get_user_sql = "SELECT * FROM users WHERE %s='%s'";
     public String get_value_sql = "SELECT %s FROM users WHERE %s='%s'";
     public String set_value_sql = "UPDATE %s SET basket='%s' WHERE username='%s'";
     public Thread t1;
@@ -46,6 +46,11 @@ public class User {
             }
         });
         t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         this.password_hash = getPassword_hash();
     }
 
@@ -55,7 +60,7 @@ public class User {
         try {
             rs = st.executeQuery(String.format(get_user_sql, "username", this.username));
             while (rs.next())
-                hash_password = rs.getString(0);
+                hash_password = rs.getString(3);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -74,16 +79,20 @@ public class User {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             messageDigest.update(password.getBytes("UTF-8"));
             String password_MD5 = byteArrayToHex(messageDigest.digest());
-            if(password_MD5 == password_hash)
-                return true;
-            else
-                return false;
+            return password_MD5.equals(password_hash);
         }catch (NoSuchAlgorithmException e){
             e.printStackTrace();
         }catch (UnsupportedEncodingException e){
             e.printStackTrace();
         }
         return false;
+    }
+
+
+    public Boolean check_md5password(String password) {
+        if (this.password_hash == null)
+            return false;
+        return password.equals(password_hash);
     }
 
     public String get_basket() {
@@ -130,7 +139,7 @@ public class User {
             Log.e("sql",sql1);
             rs = st.executeQuery(sql1);
             while (rs.next())
-                energy = rs.getFloat(1);
+                energy += rs.getFloat(1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -146,7 +155,7 @@ public class User {
             Log.e("sql",sql1);
             rs = st.executeQuery(sql1);
             while (rs.next())
-                axunge = rs.getFloat(1);
+                axunge += rs.getFloat(1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -162,7 +171,7 @@ public class User {
             Log.e("sql",sql1);
             rs = st.executeQuery(sql1);
             while (rs.next())
-                protein = rs.getFloat(1);
+                protein += rs.getFloat(1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -189,4 +198,5 @@ public class User {
         }
         return resultCharArray.toLowerCase();
     }
+
 }

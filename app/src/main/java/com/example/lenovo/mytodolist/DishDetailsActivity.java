@@ -65,7 +65,7 @@ public class DishDetailsActivity extends Activity {
                finish();//当前页面关闭
             }
         });
-        add_intobaskaet=(TextView)findViewById(R.id.tv_add_intolanzi);
+        add_intobaskaet = findViewById(R.id.tv_add_intolanzi);
         add_intobaskaet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +94,9 @@ public class DishDetailsActivity extends Activity {
                     }
                 }
                 Toast.makeText(DishDetailsActivity.this,"已丢进菜篮子",Toast.LENGTH_LONG).show();
-                StaticData.addIngredientsToBasket(new IngredientsData( dish_name, dish_data.get(pos).getIngredients()));
+                int size = dish_data.get(pos).getIngredients().size();
+                StaticData.addIngredientsToBasket(new IngredientsData(dish_name, dish_data.get
+                        (pos).getIngredients().toArray(new String[size])));
                 fristfresh();
             }
         });

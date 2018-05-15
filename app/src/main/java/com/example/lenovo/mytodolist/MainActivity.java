@@ -39,19 +39,18 @@ import java.util.List;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,ConFragment.OnFragmentInteractionListener,LanziFragment.OnFragmentInteractionListener,TuijianFragment.OnFragmentInteractionListener,MineFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, LanziFragment.OnFragmentInteractionListener, TuijianFragment.OnFragmentInteractionListener, MineFragment.OnFragmentInteractionListener {
 
     private TextView  tv_lanzi, tv_tuijian, tv_mine;
     private ImageView iv_lanzi,iv_tuijian,iv_mine,active;
     private ViewPager vp;
     private Bitmap lanzi1,lanzi2,mine1,mine2,tuijian1,tuijian2,con1,con2;
-  //  ConFragment conversation_fargment;
     LanziFragment lanzi_fargment ;
     TuijianFragment recommand_fargment;
     MineFragment mine_fargment;
     private List<Fragment> mFragmentList = new ArrayList<Fragment>();
     private FragmentAdapter mFragmentAdapter;
-    String username="小羊苏珊";
+    String username = "";
     LinearLayout splash;
     private final int STOP_SPLASH = 0;
     private final int SPLASH_TIME = 3000;
@@ -70,9 +69,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //设置xml
         setContentView(R.layout.activity_main);
         //获得用户名字符串
-        Intent intent =getIntent();
-        username=intent.getStringExtra("username");
-        StaticData.username=new String(this.username);
+        //Intent intent =getIntent();
+        username = StaticData.username;
+        // StaticData.username=new String(this.username);
         initViews();
         getpermission();
         Message msg = new Message();
@@ -114,13 +113,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 初始化布局View
      */
     private void initViews() {
-        tv_lanzi = (TextView) findViewById(R.id.tv_lanzi);
-        tv_tuijian= (TextView) findViewById(R.id.tv_tuijian);
-        tv_mine = (TextView) findViewById(R.id.tv_mine);
+        tv_lanzi = findViewById(R.id.tv_lanzi);
+        tv_tuijian = findViewById(R.id.tv_tuijian);
+        tv_mine = findViewById(R.id.tv_mine);
       //  tv_con = (TextView) findViewById(R.id.tv_con);
-        iv_lanzi = (ImageView) findViewById(R.id.iv_lanzi);
-        iv_tuijian = (ImageView) findViewById(R.id.iv_tuijian);
-        iv_mine = (ImageView) findViewById(R.id.iv_mine);
+        iv_lanzi = findViewById(R.id.iv_lanzi);
+        iv_tuijian = findViewById(R.id.iv_tuijian);
+        iv_mine = findViewById(R.id.iv_mine);
      //   iv_con = (ImageView) findViewById(R.id.iv_con);
         splash=findViewById(R.id.ll_splash);
         active=findViewById(R.id.activepage);
@@ -136,8 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         iv_mine.setOnClickListener(this);
       //  iv_con.setOnClickListener(this);
 
-        vp = (ViewPager) findViewById(R.id.mainViewPager);
-       // conversation_fargment = new ConFragment();
+        vp = findViewById(R.id.mainViewPager);
         lanzi_fargment= new LanziFragment();
         recommand_fargment = new TuijianFragment();
         mine_fargment = new MineFragment();

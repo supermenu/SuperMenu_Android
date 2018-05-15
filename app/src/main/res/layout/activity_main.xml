@@ -12,11 +12,14 @@
         android:id="@+id/ll_splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ImageView
+
             android:id="@+id/activepage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/logo"/>
+            android:layout_gravity="center"
+            android:src="@drawable/logo" />
     </LinearLayout>
 
     <android.support.v4.view.ViewPager

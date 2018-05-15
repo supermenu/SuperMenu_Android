@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
@@ -43,7 +44,7 @@ public class MineFragment extends Fragment {
 
     String username;
     TextView myusername,details;
-    ImageButton mydetails,share;
+    ImageButton mydetails, share, exit;
     PopupwindowForshare mPopwindow;
     LinearLayout LL_record;
     NumberProgressBar energy,axunge,protein;
@@ -126,6 +127,15 @@ public class MineFragment extends Fragment {
            }
        });
         share=view.findViewById(R.id.ib_share);
+        exit = view.findViewById(R.id.exit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClearUser(getActivity());
+                StaticData.datapool.finish();
+
+            }
+        });
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,7 +228,7 @@ public class MineFragment extends Fragment {
     }
 
     //点击我的资料，弹出资料修改页面
-    public void setDetails(){
+    public void setDetails() {
             /*
             启动detailsinfoactivity
              */
@@ -452,6 +462,7 @@ public class MineFragment extends Fragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        RE.finish();
     }
 
 
@@ -527,6 +538,13 @@ public class MineFragment extends Fragment {
         return bitmap;
     }
 
+    public void ClearUser(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+        this.getActivity().finish();
+    }
 
 }
 

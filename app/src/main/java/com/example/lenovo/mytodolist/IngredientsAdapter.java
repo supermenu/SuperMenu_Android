@@ -169,16 +169,17 @@ public class IngredientsAdapter extends BaseAdapter {
         int headerinderx=0;
         IngredientsData in;
         for (int i=0;i< StaticData.IngredientsData.size();i++) {
+            final int dishindex = i;
             in=StaticData.IngredientsData.get(i);
             int size = in.getItemCount();
             // 在当前分类中的索引值
-            final int ingredientsIndex = position - ingredientsHeaderIndex;
+            int ingredientsIndex = position - ingredientsHeaderIndex;
             // item在当前分类内
             if (ingredientsIndex ==0) {
                 final Thread tbase=new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if (ingredientsIndex == 0)//删除第一个
+                        if (dishindex == 0)//删除第一个
                         {
                             User u = new User(StaticData.username, StaticData.datapool);
                             try {
@@ -186,7 +187,10 @@ public class IngredientsAdapter extends BaseAdapter {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            u.setBasket("");
+                            if (StaticData.IngredientsData.size() > 1)
+                                u.setBasket(StaticData.IngredientsData.get(1).getName());
+                            else
+                                u.setBasket("");
                             u.finish();
                         }
                     }
@@ -198,7 +202,7 @@ public class IngredientsAdapter extends BaseAdapter {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                StaticData.removeIngredientsFromBasket( headerinderx);
+                StaticData.removeIngredientsFromBasket(i);
                     return;
             }
 
@@ -228,14 +232,14 @@ public class IngredientsAdapter extends BaseAdapter {
                 case TYPE_Header:
                     Holder = new ViewHeadHolder();
                     convertView = inflater.inflate(R.layout.ingredientsheader, null);
-                    Holder.textView = (TextView) convertView.findViewById(R.id.tvHeader);
+                    Holder.textView = convertView.findViewById(R.id.tvHeader);
                     Holder.delete = convertView.findViewById(R.id.deleteButton);
                     convertView.setTag(Holder);
                     break;
                 case TYPE_ITEM:
                     convertView = inflater.inflate(R.layout.ingredientitem, null);
                     viewHolder = new ViewHolder();
-                    viewHolder.content = (TextView) convertView.findViewById(R.id.ingredient);
+                    viewHolder.content = convertView.findViewById(R.id.ingredient);
                     convertView.setTag(viewHolder);
                     break;
 

@@ -487,5 +487,11 @@ public class RefreshRecord {
     }
 
 
+    public void finish() {
+        dataBase.connPool.returnConnection(conn);
+
+    }
+
+
 
 }

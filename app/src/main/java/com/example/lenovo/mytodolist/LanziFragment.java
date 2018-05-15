@@ -96,7 +96,7 @@ public class LanziFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_lanzi, container, false);
         pullrefresh=view.findViewById(R.id.refresh);
-        IngredientsList = (ListView) view.findViewById(R.id.list);
+        IngredientsList = view.findViewById(R.id.list);
         //数组适配器，将itemlist的数据显示到ingredientslist
         InAdapter = new IngredientsAdapter(this.getActivity(), StaticData.IngredientsData);
         IngredientsList.setAdapter(InAdapter);
@@ -279,8 +279,7 @@ public class LanziFragment extends Fragment {
             String[] list = ingredientslist.split("#");
             String[] newlist=new String[list.length-1];
             System.arraycopy(list,1,newlist,0,list.length-1);
-            List<String> inlist = Arrays.asList(newlist);
-            IngredientsData newdish = new IngredientsData(name, inlist);
+            IngredientsData newdish = new IngredientsData(name, newlist);
             StaticData.addIngredientsToBasket(newdish);
         }
     }
@@ -291,11 +290,13 @@ public class LanziFragment extends Fragment {
             @Override
             public void run() {
                // newdata = new DataBase();//连接池
-                StaticData.datapool= new DataBase();//连接池
-                try {
-                    StaticData.datapool.tbase.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (StaticData.datapool == null) {
+                    StaticData.datapool = new DataBase();//连接池
+                    try {
+                        StaticData.datapool.tbase.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 User u = new User(StaticData.username,StaticData.datapool);
                 try {

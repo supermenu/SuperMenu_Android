@@ -10,15 +10,12 @@ import java.util.List;
 public class StaticData {
     static ArrayList<IngredientsData> IngredientsData=new ArrayList<>();
     static ArrayList<String> dishlist=new ArrayList<>();
-    static long  totaldish_inbasket=0;
-    static int lastdishnum=0;
     static DataBase datapool;
     static String username;
     static int age;
     static char sex;
    public static   void addIngredientsToBasket(IngredientsData newdata) {
        dishlist.add(0, newdata.getName());
-       //lastdishnum = getCount();
        IngredientsData.add(0, newdata);
    }
    public static  void removeIngredientsFromBasket(int index){
